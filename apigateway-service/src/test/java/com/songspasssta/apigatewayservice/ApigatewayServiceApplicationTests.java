@@ -1,4 +1,4 @@
-package com.songspasssta.apigateway_service;
+package com.songspasssta.apigatewayservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

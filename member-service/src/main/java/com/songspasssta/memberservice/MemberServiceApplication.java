@@ -1,13 +1,13 @@
-package com.songspasssta.apigateway_service;
+package com.songspasssta.memberservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApigatewayServiceApplication {
+public class MemberServiceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ApigatewayServiceApplication.class, args);
+		SpringApplication.run(MemberServiceApplication.class, args);
 	}
 
 }

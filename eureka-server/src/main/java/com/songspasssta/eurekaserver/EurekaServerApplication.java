@@ -1,4 +1,4 @@
-package com.songspasssta.eureka_server;
+package com.songspasssta.eurekaserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

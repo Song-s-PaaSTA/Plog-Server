@@ -1,4 +1,4 @@
-package com.songspasssta.eureka_server;
+package com.songspasssta.eurekaserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
