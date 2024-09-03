@@ -1,5 +1,6 @@
 package com.songspasssta.memberservice.domain;
 
+import com.songspasssta.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @SQLDelete(sql = "UPDATE reward SET status = 'DELETED' where id = ?")
 @SQLRestriction("status = 'ACTIVE'")
-public class Reward {
+public class Reward extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
