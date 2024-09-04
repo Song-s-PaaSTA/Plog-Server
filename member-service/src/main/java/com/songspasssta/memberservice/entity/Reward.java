@@ -1,4 +1,4 @@
-package com.songspasssta.memberservice.domain;
+package com.songspasssta.memberservice.entity;
 
 import com.songspasssta.common.BaseEntity;
 import jakarta.persistence.*;
@@ -8,9 +8,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -18,23 +16,18 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = PROTECTED)
-@SQLDelete(sql = "UPDATE member SET status = 'DELETED' where id = ?")
+@SQLDelete(sql = "UPDATE reward SET status = 'DELETED' where id = ?")
 @SQLRestriction("status = 'ACTIVE'")
-public class Member extends BaseEntity {
+public class Reward extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nickname;
+    private Integer score;
 
-    @Column(nullable = false)
-    private String email;
-
-    @Column
-    private String profileImageUrl;
-
-    @OneToMany(mappedBy = "member")
-    private List<Reward> rewards = new ArrayList<>();
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 }
