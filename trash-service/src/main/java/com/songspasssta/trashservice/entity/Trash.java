@@ -27,5 +27,13 @@ public class Trash extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long placeId;
+    private Float latitude;
+
+    @Column(nullable = false)
+    private Float longitude;
+
+    @Column(nullable = false)
+    private String roadAddr;
+
+    private String placeInfo;
 }
