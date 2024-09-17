@@ -32,7 +32,6 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
-    @Column
     private String profileImageUrl;
 
     @OneToMany(mappedBy = "member")

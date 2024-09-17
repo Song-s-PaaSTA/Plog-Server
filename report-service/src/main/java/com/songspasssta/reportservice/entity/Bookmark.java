@@ -24,6 +24,12 @@ public class Bookmark extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private Long memberId;
+
+    @Column(nullable = false)
+    private Boolean bookmarked;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "report_id", nullable = false)
     private Report report;

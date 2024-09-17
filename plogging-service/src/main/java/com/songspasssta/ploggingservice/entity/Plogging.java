@@ -31,11 +31,11 @@ public class Plogging extends BaseEntity {
     @Column(nullable = false)
     private Long memberId;
 
-    @Column(nullable = false)
-    private Long startPlaceId;
+    @Column(nullable = false, length = 100)
+    private String startRoadAddr;
 
-    @Column(nullable = false)
-    private Long endPlaceId;
+    @Column(nullable = false, length = 100)
+    private String endRoadAddr;
 
     @Column(nullable = false)
     private String ploggingImgUrl;

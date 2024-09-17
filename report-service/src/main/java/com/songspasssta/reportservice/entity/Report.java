@@ -32,9 +32,6 @@ public class Report extends BaseEntity {
     private Long memberId;
 
     @Column(nullable = false)
-    private Long placeId;
-
-    @Column(nullable = false)
     private String reportImgUrl;
 
     @Column(columnDefinition = "TEXT", nullable = false)
@@ -43,6 +40,12 @@ public class Report extends BaseEntity {
     @Column(nullable = false)
     @Enumerated(value = STRING)
     private ReportType reportStatus;
+
+    @Column(nullable = false, length = 100)
+    private String placeName;
+
+    @Column(nullable = false, length = 150)
+    private String roadAddr;
 
     @OneToMany(mappedBy = "report")
     private List<Bookmark> bookmarks = new ArrayList<>();
