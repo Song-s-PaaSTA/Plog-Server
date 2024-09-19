@@ -1,4 +1,4 @@
-package com.songspasssta.memberservice.security;
+package com.songspasssta.memberservice.config;
 
 import com.songspasssta.memberservice.service.LoginApiClient;
 import org.springframework.context.annotation.Bean;
