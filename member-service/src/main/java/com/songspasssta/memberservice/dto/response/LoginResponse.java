@@ -13,17 +13,17 @@ public class LoginResponse {
     private final String email;
     private final String socialLoginId;
     private final SocialLoginType socialLoginType;
-//    private final String accessToken;
-//    private final String refreshToken;
+    private final String accessToken;
+    private final String refreshToken;
 
-    public static LoginResponse of(final Member member) {
+    public static LoginResponse of(final Member member, final String accessToken, final String refreshToken) {
         return new LoginResponse(
                 member.getNickname(),
                 member.getEmail(),
                 member.getSocialLoginId(),
-                member.getSocialLoginType()
-//                accessToken,
-//                refreshToken
+                member.getSocialLoginType(),
+                accessToken,
+                refreshToken
         );
     }
 }

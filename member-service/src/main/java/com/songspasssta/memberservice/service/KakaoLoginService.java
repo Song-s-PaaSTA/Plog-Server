@@ -1,7 +1,10 @@
 package com.songspasssta.memberservice.service;
 
+import com.songspasssta.memberservice.config.TokenProvider;
 import com.songspasssta.memberservice.domain.Member;
+import com.songspasssta.memberservice.domain.RefreshToken;
 import com.songspasssta.memberservice.domain.repository.MemberRepository;
+import com.songspasssta.memberservice.domain.repository.RefreshTokenRepository;
 import com.songspasssta.memberservice.dto.response.KakaoMemberResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,8 @@ public class KakaoLoginService {
 
     private final LoginApiClient loginApiClient;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenProvider tokenProvider;
 
     public LoginResponse login(final String accessToken) {
         final KakaoMemberResponse kakaoMemberResponse = loginApiClient.getKakaoMemberInfo("Bearer " + accessToken);
@@ -32,6 +37,13 @@ public class KakaoLoginService {
                     );
                     return memberRepository.save(newMember);
                 });
-        return LoginResponse.of(member);
+
+        final String newAccessToken = tokenProvider.generateAccessToken(member.getId().toString());
+        final RefreshToken refreshToken = new RefreshToken(tokenProvider.generateRefreshToken(), member.getId());
+
+        // is new Member 추가
+        refreshTokenRepository.save(refreshToken);
+
+        return LoginResponse.of(member, newAccessToken, refreshToken.getToken());
     }
 }

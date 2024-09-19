@@ -1,7 +1,10 @@
 package com.songspasssta.memberservice.service;
 
+import com.songspasssta.memberservice.config.TokenProvider;
 import com.songspasssta.memberservice.domain.Member;
+import com.songspasssta.memberservice.domain.RefreshToken;
 import com.songspasssta.memberservice.domain.repository.MemberRepository;
+import com.songspasssta.memberservice.domain.repository.RefreshTokenRepository;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.NaverMemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,8 @@ public class NaverLoginService {
 
     private final LoginApiClient loginApiClient;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenProvider tokenProvider;
 
     public LoginResponse login(final String accessToken) {
         final NaverMemberResponse naverMemberResponse = loginApiClient.getNaverMemberInfo("Bearer " + accessToken);
@@ -33,6 +38,11 @@ public class NaverLoginService {
                     return memberRepository.save(newMember);
                 });
 
-        return LoginResponse.of(member);
+        final String newAccessToken = tokenProvider.generateAccessToken(member.getId().toString());
+        final RefreshToken refreshToken = new RefreshToken(tokenProvider.generateRefreshToken(), member.getId());
+
+        refreshTokenRepository.save(refreshToken);
+
+        return LoginResponse.of(member, newAccessToken, refreshToken.getToken());
     }
 }
