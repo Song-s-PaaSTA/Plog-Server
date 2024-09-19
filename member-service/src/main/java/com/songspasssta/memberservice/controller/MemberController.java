@@ -8,6 +8,7 @@ import com.songspasssta.memberservice.dto.response.SignupResponse;
 import com.songspasssta.memberservice.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +17,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1")
 public class MemberController {
 
+    private final Environment env;
     private final MemberService memberService;
+
+    @GetMapping("/actuator/health-info")
+    public String getStatus() {
+        return String.format("GET User Service on" +
+                "\n local.server.port :" + env.getProperty("local.server.port")
+                + "\n egov.message :" + env.getProperty("egov.message")
+        );
+    }
+
+    @PostMapping("/actuator/health-info")
+    public String postStatus() {
+        return String.format("POST User Service on" +
+                "\n local.server.port :" + env.getProperty("local.server.port")
+                + "\n egov.message :" + env.getProperty("egov.message")
+        );
+    }
 
     @PostMapping("/login/{provider}")
     public ResponseEntity<LoginResponse> login(

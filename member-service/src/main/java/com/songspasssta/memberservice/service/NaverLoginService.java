@@ -32,6 +32,7 @@ public class NaverLoginService {
                     );
                     return memberRepository.save(newMember);
                 });
+
         return LoginResponse.of(member);
     }
 }
