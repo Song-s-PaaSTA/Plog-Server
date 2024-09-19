@@ -1,8 +1,13 @@
 package com.songspasssta.memberservice.service;
 
 import com.songspasssta.common.exception.BadRequestException;
+import com.songspasssta.memberservice.config.TokenProvider;
 import com.songspasssta.memberservice.domain.Member;
+import com.songspasssta.memberservice.domain.MemberInfo;
+import com.songspasssta.memberservice.domain.OauthMember;
+import com.songspasssta.memberservice.domain.RefreshToken;
 import com.songspasssta.memberservice.domain.repository.MemberRepository;
+import com.songspasssta.memberservice.domain.repository.RefreshTokenRepository;
 import com.songspasssta.memberservice.dto.request.SignupRequest;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.SignupResponse;
@@ -23,14 +28,51 @@ public class MemberService {
     private final KakaoLoginService kakaoLoginService;
     private final NaverLoginService naverLoginService;
     private final MemberRepository memberRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final TokenProvider tokenProvider;
 
     public LoginResponse login(final String provider, final String code) {
         if (provider.equals(KAKAO.getCode())) {
-            return kakaoLoginService.login(code);
+            return saveMember(kakaoLoginService.login(code));
         } else if (provider.equals(NAVER.getCode())) {
-            return naverLoginService.login(code);
+            return saveMember(naverLoginService.login(code));
         }
         throw new BadRequestException(FAIL_TO_SOCIAL_LOGIN);
+    }
+
+    private MemberInfo findOrCreateMember(final OauthMember oauthMember) {
+        return memberRepository.findBySocialLoginId(oauthMember.getSocialLoginId())
+                .map(member -> new MemberInfo(member, false))
+                .orElseGet(() -> createMember(oauthMember));
+    }
+
+    private MemberInfo createMember(final OauthMember oauthMember) {
+        final Member member = new Member(
+                oauthMember.getNickname(),
+                oauthMember.getEmail(),
+                oauthMember.getProfileImageUrl(),
+                oauthMember.getSocialLoginType(),
+                oauthMember.getSocialLoginId()
+        );
+
+        return new MemberInfo(member, true);
+    }
+
+    private LoginResponse saveMember(final OauthMember oauthMember) {
+        final MemberInfo memberInfo = findOrCreateMember(oauthMember);
+        final Long memberId = memberInfo.getMember().getId();
+
+        final String accessToken = tokenProvider.generateAccessToken(memberId.toString());
+        final RefreshToken refreshToken = new RefreshToken(tokenProvider.generateRefreshToken(), memberId);
+
+        refreshTokenRepository.save(refreshToken);
+
+        return LoginResponse.of(
+                memberInfo.getMember(),
+                accessToken,
+                refreshToken.getToken(),
+                memberInfo.getIsNewMember()
+        );
     }
 
     public SignupResponse completeSignup(final Long memberId, final SignupRequest signupRequest) {

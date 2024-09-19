@@ -15,15 +15,22 @@ public class LoginResponse {
     private final SocialLoginType socialLoginType;
     private final String accessToken;
     private final String refreshToken;
+    private final Boolean isNewMember;
 
-    public static LoginResponse of(final Member member, final String accessToken, final String refreshToken) {
+    public static LoginResponse of(
+            final Member member,
+            final String accessToken,
+            final String refreshToken,
+            final Boolean isNewMember
+    ) {
         return new LoginResponse(
                 member.getNickname(),
                 member.getEmail(),
                 member.getSocialLoginId(),
                 member.getSocialLoginType(),
                 accessToken,
-                refreshToken
+                refreshToken,
+                isNewMember
         );
     }
 }
