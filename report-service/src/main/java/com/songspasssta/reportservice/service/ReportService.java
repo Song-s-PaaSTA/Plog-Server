@@ -5,6 +5,7 @@ import com.songspasssta.common.exception.FileUploadException;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -48,5 +51,16 @@ public class ReportService {
         } catch (IOException e) {
             throw new FileUploadException(ExceptionCode.FILE_UPLOAD_ERROR);
         }
+    }
+
+    /**
+     * 모든 신고글 조회
+     *
+     * @return List<ReportListResponseDto> 신고글 목록
+     */
+    public List<ReportListResponseDto> findAllReports() {
+        return reportRepository.findAll().stream()
+                .map(ReportListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }

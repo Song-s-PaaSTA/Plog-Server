@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import com.songspasssta.reportservice.service.ReportService;
 import jakarta.validation.Valid;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * 신고글 API 컨트롤러
@@ -28,8 +31,17 @@ public class ReportApiController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ReportResponseDto save(@RequestPart @Valid ReportSaveRequestDto requestDto,
-                                  @RequestPart(required = false) MultipartFile reportImgFile) {
+    public ReportResponseDto save(@RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
+                                  @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
         return reportService.save(requestDto, reportImgFile);
+    }
+    /**
+     * 모든 신고글 조회
+     *
+     * @return List<ReportResponseDto> 신고글 목록
+     */
+    @GetMapping
+    public List<ReportListResponseDto> findAllReports() {
+        return reportService.findAllReports();
     }
 }
