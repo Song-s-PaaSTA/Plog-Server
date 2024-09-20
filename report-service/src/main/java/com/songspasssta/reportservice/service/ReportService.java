@@ -12,6 +12,7 @@ import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -77,7 +79,7 @@ public class ReportService {
     /**
      * 신고글 상세 조회
      *
-     * @param id 신고글 ID
+     * @param id       신고글 ID
      * @param memberId 회원 ID
      * @return ReportDetailResponseDto 신고글 상세 정보
      */
@@ -113,5 +115,37 @@ public class ReportService {
         return reports.stream()
                 .map(MyReportListResponseDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteReport(Long reportId, Long memberId) {
+        // 해당 신고글을 조회
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.ENTITY_NOT_FOUND));
+
+        // 신고글 작성자와 삭제 요청 사용자가 일치하는지 확인 (권한 확인)
+        if (!report.getMemberId().equals(memberId)) {
+            throw new EntityNotFoundException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        // 연관된 북마크 삭제
+        bookmarkRepository.deleteAllByReportId(reportId);
+
+        extracted(report);
+
+        // 신고글 삭제 (소프트 삭제로 상태 변경)
+        reportRepository.delete(report);
+    }
+
+    private void extracted(Report report) {
+        // 이미지 삭제 (S3에서 삭제)
+        if (report.getReportImgUrl() != null) {
+            try {
+                s3Service.delete(report.getReportImgUrl());
+            } catch (Exception e) {
+                log.error("S3에서 이미지 삭제 실패: {}, 이미지 URL: {}", e.getMessage(), report.getReportImgUrl(), e);
+                throw new FileUploadException(ExceptionCode.FILE_DELETE_ERROR);
+            }
+        }
     }
 }

@@ -31,7 +31,7 @@ public class ReportApiController {
      * @param reportImgFile  신고 이미지 파일
      * @return ReportResponseDto 신고글 응답 DTO, 201 Created를 반환
      */
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
     public ReportResponseDto save(@RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
                                   @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
@@ -73,5 +73,18 @@ public class ReportApiController {
     @ResponseStatus(HttpStatus.OK)
     public List<MyReportListResponseDto> findMyReports(@RequestParam("memberId") Long memberId) {
         return reportService.findMyReports(memberId);
+    }
+
+    /**
+     * 신고글 삭제
+     *
+     * @param reportId 삭제할 신고글 ID
+     * @param memberId 현재 로그인된 사용자 ID
+     */
+    @DeleteMapping("/{reportId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReport(@PathVariable("reportId") Long reportId,
+                             @RequestParam("memberId") Long memberId) {
+        reportService.deleteReport(reportId, memberId);
     }
 }

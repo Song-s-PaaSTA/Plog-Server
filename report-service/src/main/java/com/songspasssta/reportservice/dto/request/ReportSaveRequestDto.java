@@ -19,7 +19,6 @@ public class ReportSaveRequestDto {
     @NotNull(message = "회원 ID는 필수입니다.")
     private Long memberId;
 
-    @NotBlank(message = "이미지 URL은 필수입니다.")
     private String reportImgUrl;
 
     @NotBlank(message = "신고 설명은 필수입니다.")
