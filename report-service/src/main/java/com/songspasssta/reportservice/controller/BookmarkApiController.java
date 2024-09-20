@@ -3,10 +3,7 @@ package com.songspasssta.reportservice.controller;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -15,7 +12,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/reports/bookmarks")
+@RequestMapping("/api/v1/reports")
 public class BookmarkApiController {
     private final BookmarkService bookmarkService;
 
@@ -24,9 +21,20 @@ public class BookmarkApiController {
      * @param memberId 회원 ID
      * @return 북마크한 신고글 목록 응답 DTO 리스트
      */
-    @GetMapping("/mine")
+    @GetMapping("/bookmarks/mine")
     public List<ReportListResponseDto> findMyBookmarks(@RequestParam("memberId") Long memberId) {
         // TODO request header로 토큰 받기
         return bookmarkService.findMyBookmarks(memberId);
+    }
+    /**
+     * 북마크 토글
+     * @param reportId 신고글 ID
+     * @param memberId 회원 ID
+     * @return 변경된 북마크 상태
+     */
+    @PostMapping("/{reportId}/bookmarks")
+    public boolean toggleBookmark(@PathVariable("reportId") Long reportId,
+                                  @RequestParam("memberId") Long memberId) {
+        return bookmarkService.toggleBookmark(reportId, memberId);
     }
 }

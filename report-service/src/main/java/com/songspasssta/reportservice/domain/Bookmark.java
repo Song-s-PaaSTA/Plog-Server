@@ -33,4 +33,14 @@ public class Bookmark extends BaseEntity {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "report_id", nullable = false)
     private Report report;
+
+    public Bookmark(Long memberId, Report report, Boolean bookmarked) {
+        this.memberId = memberId;
+        this.report = report;
+        this.bookmarked = bookmarked;
+    }
+
+    public void setBookmarked(Boolean bookmarked) {
+        this.bookmarked = bookmarked;
+    }
 }

@@ -25,4 +25,13 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      */
     @Query("SELECT b FROM Bookmark b JOIN FETCH b.report r WHERE b.memberId = :memberId AND b.bookmarked = true")
     List<Bookmark> findAllByMemberIdAndBookmarked(@Param("memberId") Long memberId);
+
+    /**
+     * 특정 사용자가 특정 신고글에 대한 북마크 조회
+     * @param reportId 신고글 ID
+     * @param memberId 회원 ID
+     * @return 북마크 엔티티
+     */
+    @Query("SELECT b FROM Bookmark b WHERE b.report.id = :reportId AND b.memberId = :memberId")
+    Bookmark findByReportIdAndMemberId(@Param("reportId") Long reportId, @Param("memberId") Long memberId);
 }
