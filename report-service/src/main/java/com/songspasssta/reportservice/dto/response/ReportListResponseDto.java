@@ -15,11 +15,14 @@ public class ReportListResponseDto {
     private final ReportType reportStatus;
     private final String roadAddr;
     private final int bookmarkCount; // 북마크 개수
-    public ReportListResponseDto(Report entity) {
+    private final boolean bookmarkedByUser; // 내가 북마크했는지 여부
+
+    public ReportListResponseDto(Report entity, boolean bookmarkedByUser) {
         this.id = entity.getId();
         this.reportImgUrl = entity.getReportImgUrl();
         this.reportStatus = entity.getReportStatus();
         this.roadAddr = entity.getRoadAddr();
         this.bookmarkCount = entity.getBookmarks().size();
+        this.bookmarkedByUser = bookmarkedByUser;
     }
 }

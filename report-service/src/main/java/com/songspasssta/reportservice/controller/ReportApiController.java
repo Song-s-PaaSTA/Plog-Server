@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import com.songspasssta.reportservice.service.ReportService;
@@ -33,6 +34,7 @@ public class ReportApiController {
     @ResponseStatus(HttpStatus.CREATED)
     public ReportResponseDto save(@RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
                                   @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+        // TODO request header로 토큰 받기
         return reportService.save(requestDto, reportImgFile);
     }
     /**
@@ -41,7 +43,22 @@ public class ReportApiController {
      * @return List<ReportResponseDto> 신고글 목록
      */
     @GetMapping
-    public List<ReportListResponseDto> findAllReports() {
-        return reportService.findAllReports();
+    public List<ReportListResponseDto> findAllReports(@RequestParam("memberId") Long memberId) {
+        // TODO request header로 토큰 받기
+        return reportService.findAllReports(memberId);
+    }
+
+    /**
+     * 신고글 상세 조회
+     *
+     * @param reportId 신고글 ID
+     * @param memberId 회원 ID
+     * @return ReportDetailResponseDto 신고글 상세 정보
+     */
+    @GetMapping("/{reportId}")
+    public ReportDetailResponseDto findReportById(@PathVariable("reportId") Long reportId,
+                                                  @RequestParam("memberId") Long memberId) {
+        // TODO request header로 토큰 받기
+        return reportService.findReportById(reportId, memberId);
     }
 }

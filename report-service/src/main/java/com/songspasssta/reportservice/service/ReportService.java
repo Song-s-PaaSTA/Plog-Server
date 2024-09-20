@@ -1,10 +1,13 @@
 package com.songspasssta.reportservice.service;
 
+import com.songspasssta.common.exception.EntityNotFoundException;
 import com.songspasssta.common.exception.ExceptionCode;
 import com.songspasssta.common.exception.FileUploadException;
 import com.songspasssta.reportservice.domain.Report;
+import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +25,12 @@ import java.util.stream.Collectors;
 public class ReportService {
 
     private final ReportRepository reportRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final S3Service s3Service;
 
     @Transactional
     public ReportResponseDto save(ReportSaveRequestDto requestDto, MultipartFile reportImgFile) {
+        // TODO 리워드 증가
         // 이미지 파일 업로드 및 URL 생성
         String imageUrl = null;
         if (reportImgFile != null && !reportImgFile.isEmpty()) {
@@ -56,11 +61,42 @@ public class ReportService {
     /**
      * 모든 신고글 조회
      *
+     * @param memberId 현재 로그인된 사용자 ID
      * @return List<ReportListResponseDto> 신고글 목록
      */
-    public List<ReportListResponseDto> findAllReports() {
+    public List<ReportListResponseDto> findAllReports(Long memberId) {
         return reportRepository.findAll().stream()
-                .map(ReportListResponseDto::new)
+                .map(report -> {
+                    boolean isBookmarked = checkIfBookmarkedByMember(report.getId(), memberId);
+                    return new ReportListResponseDto(report, isBookmarked);
+                })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 신고글 상세 조회
+     *
+     * @param id 신고글 ID
+     * @param memberId 회원 ID
+     * @return ReportDetailResponseDto 신고글 상세 정보
+     */
+    public ReportDetailResponseDto findReportById(Long id, Long memberId) {
+        Report report = reportRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.ENTITY_NOT_FOUND));
+
+        boolean isBookmarkedByUser = checkIfBookmarkedByMember(id, memberId);
+
+        return new ReportDetailResponseDto(report, isBookmarkedByUser);
+    }
+
+    /**
+     * 사용자가 특정 신고글을 북마크했는지 확인
+     *
+     * @param reportId 신고글 ID
+     * @param memberId 사용자 ID
+     * @return boolean 사용자가 북마크했는지 여부
+     */
+    private boolean checkIfBookmarkedByMember(Long reportId, Long memberId) {
+        return bookmarkRepository.existsByReportIdAndMemberId(reportId, memberId);
     }
 }
