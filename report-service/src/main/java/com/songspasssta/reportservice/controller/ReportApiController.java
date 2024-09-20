@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
@@ -60,5 +61,17 @@ public class ReportApiController {
                                                   @RequestParam("memberId") Long memberId) {
         // TODO request header로 토큰 받기
         return reportService.findReportById(reportId, memberId);
+    }
+
+    /**
+     * 특정 사용자의 신고글 내역 조회
+     *
+     * @param memberId 현재 로그인된 사용자 ID
+     * @return List<MyReportListResponseDto> 신고글 목록
+     */
+    @GetMapping("/mine")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MyReportListResponseDto> findMyReports(@RequestParam("memberId") Long memberId) {
+        return reportService.findMyReports(memberId);
     }
 }

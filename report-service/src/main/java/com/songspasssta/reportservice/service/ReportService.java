@@ -7,6 +7,7 @@ import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
@@ -98,5 +99,19 @@ public class ReportService {
      */
     private boolean checkIfBookmarkedByMember(Long reportId, Long memberId) {
         return bookmarkRepository.existsByReportIdAndMemberId(reportId, memberId);
+    }
+
+    /**
+     * 특정 사용자의 신고글 내역 조회
+     *
+     * @param memberId 사용자 ID
+     * @return List<MyReportListResponseDto> 신고글 목록
+     */
+    public List<MyReportListResponseDto> findMyReports(Long memberId) {
+        List<Report> reports = reportRepository.findAllByMemberId(memberId);
+
+        return reports.stream()
+                .map(MyReportListResponseDto::new)
+                .collect(Collectors.toList());
     }
 }
