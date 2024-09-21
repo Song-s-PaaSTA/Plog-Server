@@ -16,9 +16,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ReportSaveRequestDto {
 
-    @NotNull(message = "회원 ID는 필수입니다.")
-    private Long memberId;
-
     private String reportImgUrl;
 
     @NotBlank(message = "신고 설명은 필수입니다.")
@@ -32,14 +29,13 @@ public class ReportSaveRequestDto {
         this.reportImgUrl = reportImgUrl;
     }
     @Builder
-    public ReportSaveRequestDto(Long memberId, String reportImgUrl, String reportDesc, String roadAddr) {
-        this.memberId = memberId;
+    public ReportSaveRequestDto(String reportImgUrl, String reportDesc, String roadAddr) {
         this.reportImgUrl = reportImgUrl;
         this.reportDesc = reportDesc;
         this.roadAddr = roadAddr;
     }
 
-    public Report toEntity() {
+    public Report toEntity(Long memberId) {
         return Report.builder()
                 .memberId(memberId)
                 .reportImgUrl(reportImgUrl)

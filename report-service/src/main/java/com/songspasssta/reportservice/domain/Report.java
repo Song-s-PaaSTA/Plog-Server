@@ -66,4 +66,20 @@ public class Report extends BaseEntity {
         this.reportStatus = reportStatus;
         this.roadAddr = roadAddr;
     }
+
+    public void setReportDesc(String reportDesc) {
+        this.reportDesc = reportDesc;
+    }
+
+    public void setRoadAddr(String roadAddr) {
+        this.roadAddr = roadAddr;
+    }
+
+    public void setReportStatus(ReportType reportStatus) {
+        this.reportStatus = reportStatus;
+    }
+
+    public void setReportImgUrl(String imageUrl) {
+        this.reportImgUrl = imageUrl;
+    }
 }

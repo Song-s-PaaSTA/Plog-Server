@@ -7,6 +7,7 @@ import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.request.ReportUpdateRequestDto;
 import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
@@ -32,7 +33,7 @@ public class ReportService {
     private final S3Service s3Service;
 
     @Transactional
-    public ReportResponseDto save(ReportSaveRequestDto requestDto, MultipartFile reportImgFile) {
+    public ReportResponseDto save(Long memberId, ReportSaveRequestDto requestDto, MultipartFile reportImgFile) {
         // TODO 리워드 증가
         // 이미지 파일 업로드 및 URL 생성
         String imageUrl = null;
@@ -43,7 +44,7 @@ public class ReportService {
         requestDto.setReportImgUrl(imageUrl);
 
         // report 객체 저장
-        Report savedReport = reportRepository.save(requestDto.toEntity());
+        Report savedReport = reportRepository.save(requestDto.toEntity(memberId));
         return new ReportResponseDto(savedReport);
     }
 
@@ -117,6 +118,12 @@ public class ReportService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 신고글 삭제
+     *
+     * @param reportId 신고글 번호
+     * @param memberId 사용자 번호
+     */
     @Transactional
     public void deleteReport(Long reportId, Long memberId) {
         // 해당 신고글을 조회
@@ -137,8 +144,11 @@ public class ReportService {
         reportRepository.delete(report);
     }
 
+    /**
+     *  이미지 삭제 (S3에서 삭제)
+     * @param report 신고글
+     */
     private void extracted(Report report) {
-        // 이미지 삭제 (S3에서 삭제)
         if (report.getReportImgUrl() != null) {
             try {
                 s3Service.delete(report.getReportImgUrl());
@@ -147,5 +157,49 @@ public class ReportService {
                 throw new FileUploadException(ExceptionCode.FILE_DELETE_ERROR);
             }
         }
+    }
+
+    /**
+     * 신고글 삭제
+     *
+     * @param reportId 신고글 번호
+     * @param memberId 사용자 번호
+     * @param requestDto 신고글 업데이트 정보
+     * @param reportImgFile 업로드할 이미지 파일
+     * @return ReportResponseDto 수정 후 신고글 객체
+     */
+    @Transactional
+    public ReportResponseDto updateReport(Long reportId, Long memberId, ReportUpdateRequestDto requestDto, MultipartFile reportImgFile) {
+        // 신고글 조회 및 예외 처리
+        Report report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.ENTITY_NOT_FOUND));
+
+        // 신고글 작성자와 삭제 요청 사용자가 일치하는지 확인 (권한 확인)
+        if (!report.getMemberId().equals(memberId)) {
+            throw new EntityNotFoundException(ExceptionCode.ACCESS_DENIED);
+        }
+
+        // 이미지 파일 업로드 및 URL 생성
+        String imageUrl = requestDto.getReportImgUrl();
+        if (reportImgFile != null && !reportImgFile.isEmpty()) {
+            imageUrl = uploadImageToS3(reportImgFile);
+        }
+
+        // null이 아닌 필드만 업데이트
+        if (requestDto.getReportDesc() != null) {
+            report.setReportDesc(requestDto.getReportDesc());
+        }
+        if (requestDto.getRoadAddr() != null) {
+            report.setRoadAddr(requestDto.getRoadAddr());
+        }
+        if (requestDto.getReportStatus() != null) {
+            report.setReportStatus(requestDto.getReportStatus());
+        }
+        if (imageUrl != null) {
+            report.setReportImgUrl(imageUrl);
+        }
+
+        // 저장된 데이터 반환
+        return new ReportResponseDto(report);
     }
 }

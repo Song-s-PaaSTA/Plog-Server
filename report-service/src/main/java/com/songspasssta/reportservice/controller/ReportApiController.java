@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
+import com.songspasssta.reportservice.dto.request.ReportUpdateRequestDto;
 import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
@@ -27,17 +28,19 @@ public class ReportApiController {
     /**
      * 신고글 저장
      *
-     * @param requestDto     신고글 저장 요청 DTO
-     * @param reportImgFile  신고 이미지 파일
+     * @param requestDto    신고글 저장 요청 DTO
+     * @param reportImgFile 신고 이미지 파일
      * @return ReportResponseDto 신고글 응답 DTO, 201 Created를 반환
      */
     @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReportResponseDto save(@RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
+    public ReportResponseDto save(@RequestParam("memberId") Long memberId,
+                                  @RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
                                   @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
         // TODO request header로 토큰 받기
-        return reportService.save(requestDto, reportImgFile);
+        return reportService.save(memberId, requestDto, reportImgFile);
     }
+
     /**
      * 모든 신고글 조회
      *
@@ -86,5 +89,23 @@ public class ReportApiController {
     public void deleteReport(@PathVariable("reportId") Long reportId,
                              @RequestParam("memberId") Long memberId) {
         reportService.deleteReport(reportId, memberId);
+    }
+
+    /**
+     * 신고글 수정
+     *
+     * @param reportId      수정할 신고글 ID
+     * @param requestDto    신고글 수정 요청 DTO
+     * @param reportImgFile 수정할 신고 이미지 파일
+     * @return ReportResponseDto 수정된 신고글 응답 DTO
+     */
+    @PatchMapping("/{reportId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ReportResponseDto updateReport(@PathVariable("reportId") Long reportId,
+                                          @RequestParam("memberId") Long memberId,
+                                          @RequestPart(value = "requestDto", required = false) @Valid ReportUpdateRequestDto requestDto,
+                                          @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+        // TODO request header로 토큰 받기
+        return reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
     }
 }
