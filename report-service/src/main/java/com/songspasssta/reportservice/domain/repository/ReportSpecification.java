@@ -10,7 +10,7 @@ public class ReportSpecification {
     // 상태 필터링
     public static Specification<Report> withReportType(ReportType reportType) {
         return (root, query, criteriaBuilder) ->
-                reportType == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("reportStatus"), reportType);
+                reportType == null ? criteriaBuilder.conjunction() : criteriaBuilder.equal(root.get("reportType"), reportType);
     }
 
     // 지역 필터링

@@ -45,20 +45,20 @@ public class ReportApiController {
      * 모든 신고글 조회
      *
      * @param memberId 현재 로그인된 사용자 ID
-     * @param region (선택) 조회할 지역. 예: "서울특별시"
-     * @param sort (선택) 정렬 기준 리스트. 예: ["like", "date"] (인기순, 최신순)
-     * @param status (선택) 신고글의 상태. 예: "준비중", "완료"
+     * @param regions  (선택) 조회할 지역. 예: "서울특별시"
+     * @param sort     (선택) 정렬 기준 리스트. 예: ["like", "date"] (인기순, 최신순)
+     * @param statuses (선택) 신고글의 상태. 예: "준비중", "완료"
      * @return List<ReportListResponseDto> 필터링 및 정렬된 신고글 목록
      */
     @GetMapping
     public List<ReportListResponseDto> findAllReports(
             @RequestParam("memberId") Long memberId,
-            @RequestParam(value = "region", required = false) String region, // 지역 필터링
-            @RequestParam(value = "sort", required = false) List<String> sort, // 정렬 기준 리스트
-            @RequestParam(value = "status", required = false) String status // 상태 필터링
+            @RequestParam(value = "region", required = false) List<String> regions, // 지역 필터링
+            @RequestParam(value = "sort", required = false) String sort, // 정렬 기준, 단일 값만 허용
+            @RequestParam(value = "status", required = false) List<String> statuses // 상태 필터링
     ) {
         // TODO request header로 토큰 받기
-        return reportService.findAllReports(memberId, region, sort, status);
+        return reportService.findAllReports(memberId, regions, sort, statuses);
     }
 
     /**

@@ -86,26 +86,51 @@ public class ReportService {
      * 모든 신고글 조회
      *
      * @param memberId 현재 로그인된 사용자 ID
-     * @param region   (선택) 조회할 지역
-     * @param sort     (선택) 정렬 기준 리스트 (최신순, 인기순)
-     * @param status   (선택) 신고글의 상태
+     * @param regions   (선택) 조회할 지역
+     * @param sort      (선택) 정렬 기준 리스트 (최신순, 인기순)
+     * @param statuses   (선택) 신고글의 상태
      * @return List<ReportListResponseDto> 필터링 및 정렬된 신고글 목록. 각 신고글의 북마크 여부가 포함됩니다.
      */
-    public List<ReportListResponseDto> findAllReports(Long memberId, String region, List<String> sort, String status) {
-        ReportType reportType = Optional.ofNullable(status).map(ReportType::fromKoreanDescription).orElse(null);
-        RegionType regionType = Optional.ofNullable(region).map(RegionType::fromKoreanName).orElse(null);
+    public List<ReportListResponseDto> findAllReports(Long memberId, List<String> regions, String sort, List<String> statuses) {
+        // 각 `region`과 `status` 값들을 `RegionType`과 `ReportType`으로 변환
+        List<RegionType> regionTypes = Optional.ofNullable(regions)
+                .orElse(List.of()) // null이면 빈 리스트 반환
+                .stream()
+                .map(RegionType::fromKoreanName) // 각 region을 RegionType으로 변환
+                .toList();
+
+        List<ReportType> reportTypes = Optional.ofNullable(statuses)
+                .orElse(List.of()) // null이면 빈 리스트 반환
+                .stream()
+                .map(ReportType::fromKoreanDescription) // 각 status를 ReportType으로 변환
+                .toList();
 
         // 동적 쿼리 조합
-        Specification<Report> specification = Specification.where(ReportSpecification.withReportType(reportType))
-                .and(ReportSpecification.withRegionType(regionType));
+        Specification<Report> specification = Specification.where(null);
 
-        // 정렬 조건 추가
+        // RegionType 필터링 추가 (OR 조건)
+        if (!regionTypes.isEmpty()) {
+            Specification<Report> regionSpec = Specification.where(ReportSpecification.withRegionType(regionTypes.get(0)));
+            for (int i = 1; i < regionTypes.size(); i++) {
+                regionSpec = regionSpec.or(ReportSpecification.withRegionType(regionTypes.get(i)));
+            }
+            specification = specification.and(regionSpec);
+        }
+
+        // ReportType 필터링 추가 (OR 조건)
+        if (!reportTypes.isEmpty()) {
+            Specification<Report> statusSpec = Specification.where(ReportSpecification.withReportType(reportTypes.get(0)));
+            for (int i = 1; i < reportTypes.size(); i++) {
+                statusSpec = statusSpec.or(ReportSpecification.withReportType(reportTypes.get(i)));
+            }
+            specification = specification.and(statusSpec);
+        }
+
+        // 단일 정렬 조건 추가
         if (sort != null && !sort.isEmpty()) {
-            for (String sortOption : sort) {
-                switch (sortOption) {
-                    case "date" -> specification = specification.and(ReportSpecification.orderByCreatedAt());
-                    case "popularity" -> specification = specification.and(ReportSpecification.orderByBookmarkCount());
-                }
+            switch (sort) {
+                case "date" -> specification = specification.and(ReportSpecification.orderByCreatedAt());
+                case "popularity" -> specification = specification.and(ReportSpecification.orderByBookmarkCount());
             }
         }
 
