@@ -44,12 +44,21 @@ public class ReportApiController {
     /**
      * 모든 신고글 조회
      *
-     * @return List<ReportResponseDto> 신고글 목록
+     * @param memberId 현재 로그인된 사용자 ID
+     * @param region (선택) 조회할 지역. 예: "서울특별시"
+     * @param sort (선택) 정렬 기준 리스트. 예: ["like", "date"] (인기순, 최신순)
+     * @param status (선택) 신고글의 상태. 예: "준비중", "완료"
+     * @return List<ReportListResponseDto> 필터링 및 정렬된 신고글 목록
      */
     @GetMapping
-    public List<ReportListResponseDto> findAllReports(@RequestParam("memberId") Long memberId) {
+    public List<ReportListResponseDto> findAllReports(
+            @RequestParam("memberId") Long memberId,
+            @RequestParam(value = "region", required = false) String region, // 지역 필터링
+            @RequestParam(value = "sort", required = false) List<String> sort, // 정렬 기준 리스트
+            @RequestParam(value = "status", required = false) String status // 상태 필터링
+    ) {
         // TODO request header로 토큰 받기
-        return reportService.findAllReports(memberId);
+        return reportService.findAllReports(memberId, region, sort, status);
     }
 
     /**
@@ -103,8 +112,8 @@ public class ReportApiController {
     @ResponseStatus(HttpStatus.OK)
     public ReportResponseDto updateReport(@PathVariable("reportId") Long reportId,
                                           @RequestParam("memberId") Long memberId,
-                                          @RequestPart(value = "requestDto", required = false) @Valid ReportUpdateRequestDto requestDto,
-                                          @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+                                          @RequestPart(value = "requestDto") @Valid ReportUpdateRequestDto requestDto,
+                                          @RequestPart(value = "reportImgFile") MultipartFile reportImgFile) {
         // TODO request header로 토큰 받기
         return reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
     }

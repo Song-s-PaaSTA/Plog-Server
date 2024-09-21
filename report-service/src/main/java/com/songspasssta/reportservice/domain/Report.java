@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.domain;
 
 import com.songspasssta.common.BaseEntity;
+import com.songspasssta.reportservice.domain.type.RegionType;
 import com.songspasssta.reportservice.domain.type.ReportType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -46,6 +47,10 @@ public class Report extends BaseEntity {
 
     @Column(nullable = false, length = 150)
     private String roadAddr;
+
+    @Column(nullable = false)
+    @Enumerated(value = STRING)
+    private RegionType regionType;
 
     @OneToMany(mappedBy = "report")
     private List<Bookmark> bookmarks = new ArrayList<>();

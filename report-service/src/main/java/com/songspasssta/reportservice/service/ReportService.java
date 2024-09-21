@@ -6,6 +6,9 @@ import com.songspasssta.common.exception.FileUploadException;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
+import com.songspasssta.reportservice.domain.repository.ReportSpecification;
+import com.songspasssta.reportservice.domain.type.RegionType;
+import com.songspasssta.reportservice.domain.type.ReportType;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequestDto;
 import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
@@ -14,12 +17,15 @@ import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
 import com.songspasssta.reportservice.dto.response.ReportResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -43,8 +49,14 @@ public class ReportService {
         // 이미지 URL을 DTO에 설정
         requestDto.setReportImgUrl(imageUrl);
 
+        // roadAddr을 통해 RegionType을 설정
+        RegionType regionType = RegionType.fromRoadAddr(requestDto.getRoadAddr());
+        requestDto.setRegionType(regionType);
+
         // report 객체 저장
-        Report savedReport = reportRepository.save(requestDto.toEntity(memberId));
+        Report savedReport = reportRepository.save(requestDto.toEntity(memberId,));
+
+        // report 객체 저장
         return new ReportResponseDto(savedReport);
     }
 
@@ -62,18 +74,44 @@ public class ReportService {
         }
     }
 
+
     /**
      * 모든 신고글 조회
      *
      * @param memberId 현재 로그인된 사용자 ID
-     * @return List<ReportListResponseDto> 신고글 목록
+     * @param region   (선택) 조회할 지역
+     * @param sort     (선택) 정렬 기준 리스트 (최신순, 인기순)
+     * @param status   (선택) 신고글의 상태
+     * @return List<ReportListResponseDto> 필터링 및 정렬된 신고글 목록. 각 신고글의 북마크 여부가 포함됩니다.
      */
-    public List<ReportListResponseDto> findAllReports(Long memberId) {
-        return reportRepository.findAll().stream()
-                .map(report -> {
-                    boolean isBookmarked = checkIfBookmarkedByMember(report.getId(), memberId);
-                    return new ReportListResponseDto(report, isBookmarked);
-                })
+    public List<ReportListResponseDto> findAllReports(Long memberId, String region, List<String> sort, String status) {
+        ReportType reportType = Optional.ofNullable(status).map(ReportType::fromKoreanDescription).orElse(null);
+        RegionType regionType = Optional.ofNullable(region).map(RegionType::fromKoreanName).orElse(null);
+
+        // 동적 쿼리 조합
+        Specification<Report> specification = Specification.where(ReportSpecification.withReportType(reportType))
+                .and(ReportSpecification.withRegionType(regionType));
+
+        // 정렬 조건 추가
+        if (sort != null && !sort.isEmpty()) {
+            for (String sortOption : sort) {
+                switch (sortOption) {
+                    case "date" -> specification = specification.and(ReportSpecification.orderByCreatedAt());
+                    case "bookmark" -> specification = specification.and(ReportSpecification.orderByBookmarkCount());
+                }
+            }
+        }
+
+        // 필터링 및 정렬된 결과를 가져옴
+        List<Report> reports = reportRepository.findAll(specification);
+
+        return convertToResponseDto(reports, memberId);
+    }
+
+    // ReportListResponseDto 변환 및 북마크 여부 체크 메서드
+    private List<ReportListResponseDto> convertToResponseDto(List<Report> reports, Long memberId) {
+        return reports.stream()
+                .map(report -> new ReportListResponseDto(report, checkIfBookmarkedByMember(report.getId(), memberId)))
                 .collect(Collectors.toList());
     }
 
@@ -145,7 +183,8 @@ public class ReportService {
     }
 
     /**
-     *  이미지 삭제 (S3에서 삭제)
+     * 이미지 삭제 (S3에서 삭제)
+     *
      * @param report 신고글
      */
     private void extracted(Report report) {
@@ -162,9 +201,9 @@ public class ReportService {
     /**
      * 신고글 삭제
      *
-     * @param reportId 신고글 번호
-     * @param memberId 사용자 번호
-     * @param requestDto 신고글 업데이트 정보
+     * @param reportId      신고글 번호
+     * @param memberId      사용자 번호
+     * @param requestDto    신고글 업데이트 정보
      * @param reportImgFile 업로드할 이미지 파일
      * @return ReportResponseDto 수정 후 신고글 객체
      */
