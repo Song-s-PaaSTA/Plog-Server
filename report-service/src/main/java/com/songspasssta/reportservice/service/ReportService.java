@@ -50,13 +50,20 @@ public class ReportService {
         requestDto.setReportImgUrl(imageUrl);
 
         // roadAddr을 통해 RegionType을 설정
-        RegionType regionType = RegionType.fromRoadAddr(requestDto.getRoadAddr());
+        String regionCode = requestDto.extractRegionFromAddr();
+        RegionType regionType = RegionType.fromRoadAddr(regionCode); // RegionType 설정
         requestDto.setRegionType(regionType);
 
-        // report 객체 저장
-        Report savedReport = reportRepository.save(requestDto.toEntity(memberId,));
+        // inputReportStatus를 통해 ReportType 결정
+        ReportType reportType = ReportType.fromKoreanDescription(requestDto.getInputReportStatus());
+        if (reportType == null){ // 신고글 상태 값이 이상할 경우, 에러 방지를 위해 초기값 NOT_STARTED 사용
+            reportType = ReportType.NOT_STARTED;
+        }
+        requestDto.setReportType(reportType);
 
         // report 객체 저장
+        Report savedReport = reportRepository.save(requestDto.toEntity(memberId));
+
         return new ReportResponseDto(savedReport);
     }
 
@@ -97,7 +104,7 @@ public class ReportService {
             for (String sortOption : sort) {
                 switch (sortOption) {
                     case "date" -> specification = specification.and(ReportSpecification.orderByCreatedAt());
-                    case "bookmark" -> specification = specification.and(ReportSpecification.orderByBookmarkCount());
+                    case "popularity" -> specification = specification.and(ReportSpecification.orderByBookmarkCount());
                 }
             }
         }
@@ -176,7 +183,7 @@ public class ReportService {
         // 연관된 북마크 삭제
         bookmarkRepository.deleteAllByReportId(reportId);
 
-        extracted(report);
+        extracted(report.getReportImgUrl());
 
         // 신고글 삭제 (소프트 삭제로 상태 변경)
         reportRepository.delete(report);
@@ -185,14 +192,14 @@ public class ReportService {
     /**
      * 이미지 삭제 (S3에서 삭제)
      *
-     * @param report 신고글
+     * @param reportImageUrl 삭제할 이미지
      */
-    private void extracted(Report report) {
-        if (report.getReportImgUrl() != null) {
+    private void extracted(String reportImageUrl) {
+        if (reportImageUrl != null) {
             try {
-                s3Service.delete(report.getReportImgUrl());
+                s3Service.delete(reportImageUrl);
             } catch (Exception e) {
-                log.error("S3에서 이미지 삭제 실패: {}, 이미지 URL: {}", e.getMessage(), report.getReportImgUrl(), e);
+                log.error("S3에서 이미지 삭제 실패: {}, 이미지 URL: {}", e.getMessage(), reportImageUrl, e);
                 throw new FileUploadException(ExceptionCode.FILE_DELETE_ERROR);
             }
         }
@@ -218,24 +225,23 @@ public class ReportService {
             throw new EntityNotFoundException(ExceptionCode.ACCESS_DENIED);
         }
 
-        // 이미지 파일 업로드 및 URL 생성
-        String imageUrl = requestDto.getReportImgUrl();
-        if (reportImgFile != null && !reportImgFile.isEmpty()) {
-            imageUrl = uploadImageToS3(reportImgFile);
-        }
+        // 기존 이미지 삭제
+        extracted(requestDto.getExistingImageUrl());
 
-        // null이 아닌 필드만 업데이트
-        if (requestDto.getReportDesc() != null) {
-            report.setReportDesc(requestDto.getReportDesc());
+        // 새로운 이미지 업로드 및 URL 설정
+        String newImageUrl = null;
+        if (reportImgFile != null && !reportImgFile.isEmpty()) {
+            newImageUrl = uploadImageToS3(reportImgFile);
         }
-        if (requestDto.getRoadAddr() != null) {
-            report.setRoadAddr(requestDto.getRoadAddr());
+        // inputReportStatus를 통해 ReportType 결정
+        ReportType reportType = ReportType.fromKoreanDescription(requestDto.getInputReportStatus());
+        if (reportType == null){ // 신고글 상태 값이 이상할 경우, 에러 방지를 위해 초기값 NOT_STARTED 사용
+            reportType = ReportType.NOT_STARTED;
         }
-        if (requestDto.getReportStatus() != null) {
-            report.setReportStatus(requestDto.getReportStatus());
-        }
-        if (imageUrl != null) {
-            report.setReportImgUrl(imageUrl);
+        report.setReportType(reportType);
+        report.setReportDesc(requestDto.getReportDesc());
+        if (newImageUrl != null) {
+            report.setReportImgUrl(newImageUrl); // 새로운 이미지 URL 업데이트
         }
 
         // 저장된 데이터 반환

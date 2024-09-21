@@ -22,7 +22,7 @@ public class ReportResponseDto {
         this.memberId = entity.getMemberId();
         this.reportImgUrl = entity.getReportImgUrl();
         this.reportDesc = entity.getReportDesc();
-        this.reportStatus = entity.getReportStatus();
+        this.reportStatus = entity.getReportType();
         this.roadAddr = entity.getRoadAddr();
     }
 }

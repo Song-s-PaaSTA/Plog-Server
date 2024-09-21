@@ -20,7 +20,7 @@ public class ReportListResponseDto {
     public ReportListResponseDto(Report entity, boolean bookmarkedByUser) {
         this.id = entity.getId();
         this.reportImgUrl = entity.getReportImgUrl();
-        this.reportStatus = entity.getReportStatus();
+        this.reportStatus = entity.getReportType();
         this.roadAddr = entity.getRoadAddr();
         this.bookmarkCount = entity.getBookmarks().size();
         this.bookmarkedByUser = bookmarkedByUser;

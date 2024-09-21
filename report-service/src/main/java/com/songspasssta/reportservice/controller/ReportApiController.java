@@ -113,7 +113,7 @@ public class ReportApiController {
     public ReportResponseDto updateReport(@PathVariable("reportId") Long reportId,
                                           @RequestParam("memberId") Long memberId,
                                           @RequestPart(value = "requestDto") @Valid ReportUpdateRequestDto requestDto,
-                                          @RequestPart(value = "reportImgFile") MultipartFile reportImgFile) {
+                                          @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) { // 새 이미지는 필수 아님
         // TODO request header로 토큰 받기
         return reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
     }

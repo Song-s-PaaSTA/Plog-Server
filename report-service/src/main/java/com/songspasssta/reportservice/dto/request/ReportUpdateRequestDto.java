@@ -10,18 +10,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class ReportUpdateRequestDto {
-    private String roadAddr;
+    @NotBlank(message = "기존 이미지 url은 필수입니다.")
+    private String existingImageUrl;
 
-    private ReportType reportStatus;
+    @NotBlank(message = "리포트 상태는 필수입니다.")
+    private String inputReportStatus;
 
+    @NotBlank(message = "신고 설명은 필수입니다.")
     private String reportDesc;
 
-    private String reportImgUrl; // 이미지 URL
-
-    public ReportUpdateRequestDto(String roadAddr, ReportType reportStatus, String reportDesc, String reportImgUrl) {
-        this.roadAddr = roadAddr;
-        this.reportStatus = reportStatus;
-        this.reportDesc = reportDesc;
-        this.reportImgUrl = reportImgUrl;
-    }
 }

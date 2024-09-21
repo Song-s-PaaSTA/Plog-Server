@@ -40,8 +40,9 @@ public class Report extends BaseEntity {
 
     @Column(nullable = false)
     @Enumerated(value = STRING)
-    private ReportType reportStatus;
+    private ReportType reportType;
 
+    // 실제 화면에서 안 쓰므로 제거
 //    @Column(nullable = false, length = 100)
 //    private String placeName;
 
@@ -60,16 +61,17 @@ public class Report extends BaseEntity {
      * @param memberId       멤버 번호
      * @param reportImgUrl   신고글 이미지
      * @param reportDesc     신고글 내용
-     * @param reportStatus   신고된 장소 상태
+     * @param reportType   신고된 장소 상태
      * @param roadAddr       신고된 장소 주소
      */
     @Builder
-    public Report(Long memberId, String reportImgUrl, String reportDesc, ReportType reportStatus, String roadAddr) {
+    public Report(Long memberId, String reportImgUrl, String reportDesc, ReportType reportType, String roadAddr, RegionType regionType) {
         this.memberId = memberId;
         this.reportImgUrl = reportImgUrl;
         this.reportDesc = reportDesc;
-        this.reportStatus = reportStatus;
+        this.reportType = reportType;
         this.roadAddr = roadAddr;
+        this.regionType = regionType;
     }
 
     public void setReportDesc(String reportDesc) {
@@ -81,10 +83,14 @@ public class Report extends BaseEntity {
     }
 
     public void setReportStatus(ReportType reportStatus) {
-        this.reportStatus = reportStatus;
+        this.reportType = reportStatus;
     }
 
     public void setReportImgUrl(String imageUrl) {
         this.reportImgUrl = imageUrl;
+    }
+
+    public void setReportType(ReportType reportType) {
+        this.reportType = reportType;
     }
 }

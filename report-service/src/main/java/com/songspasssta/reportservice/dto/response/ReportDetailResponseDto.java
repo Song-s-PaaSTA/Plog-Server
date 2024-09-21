@@ -20,7 +20,7 @@ public class ReportDetailResponseDto {
         this.reportImgUrl = report.getReportImgUrl();
         this.reportDesc = report.getReportDesc();
         this.roadAddr = report.getRoadAddr();
-        this.reportStatus = report.getReportStatus();
+        this.reportStatus = report.getReportType();
         this.createdAt = report.getCreatedAt().toString().substring(2, 10).replace("-", ".");
         this.bookmarkCount = report.getBookmarks().size();
         this.bookmarkedByUser = bookmarkedByUser;

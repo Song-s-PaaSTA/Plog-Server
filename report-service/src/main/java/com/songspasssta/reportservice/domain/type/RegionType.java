@@ -27,8 +27,8 @@ public enum RegionType {
     GYEONGNAM("경상남도", "경남"),
     JEJU("제주특별자치도", "제주");
 
-    private final String koreanName;
-    private final String shortName; // 추가된 필드: 짧은 이름
+    private final String koreanName; // 긴 도시명 (서울특별시)
+    private final String shortName; // 짧은 도시명 (서울)
 
     RegionType(String koreanName, String shortName) {
         this.koreanName = koreanName;
