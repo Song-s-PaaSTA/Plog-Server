@@ -9,9 +9,6 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -43,8 +40,9 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String socialLoginId;
 
-    @OneToMany(mappedBy = "member")
-    private List<Reward> rewards = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reward_id")
+    private Reward reward;
 
     public Member(
             final String nickname,
