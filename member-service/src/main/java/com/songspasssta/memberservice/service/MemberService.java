@@ -55,7 +55,9 @@ public class MemberService {
                 oauthMember.getSocialLoginId()
         );
 
-        return new MemberInfo(member, true);
+        final Member newMember = memberRepository.save(member);
+
+        return new MemberInfo(newMember, true);
     }
 
     private LoginResponse saveMember(final OauthMember oauthMember) {

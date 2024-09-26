@@ -45,7 +45,7 @@ public class MemberController {
         return ResponseEntity.ok().body(loginResponse);
     }
 
-    @PostMapping("/signup/complete")
+    @PatchMapping("/signup/complete")
     public ResponseEntity<SignupResponse> completeSignup(
             @Auth final Accessor accessor,
             @RequestBody @Valid final SignupRequest signupRequest) {

@@ -20,6 +20,7 @@ public class NaverMemberResponse {
     private NaverMemberDetail naverMemberDetail;
 
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class NaverMemberDetail {
         private String id;
         private String nickname;

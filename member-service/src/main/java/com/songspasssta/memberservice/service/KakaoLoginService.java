@@ -22,7 +22,7 @@ public class KakaoLoginService {
 
         return new OauthMember(
                 profile.getNickname(),
-                profile.getEmail(),
+                kakaoMemberResponse.getKakaoAccount().getEmail(),
                 profile.getProfileImageUrl(),
                 KAKAO,
                 socialLoginId
