@@ -2,15 +2,13 @@ package com.songspasssta.memberservice.service;
 
 import com.songspasssta.common.exception.BadRequestException;
 import com.songspasssta.memberservice.config.TokenProvider;
-import com.songspasssta.memberservice.domain.Member;
-import com.songspasssta.memberservice.domain.MemberInfo;
-import com.songspasssta.memberservice.domain.OauthMember;
-import com.songspasssta.memberservice.domain.RefreshToken;
+import com.songspasssta.memberservice.domain.*;
 import com.songspasssta.memberservice.domain.repository.MemberRepository;
 import com.songspasssta.memberservice.domain.repository.RefreshTokenRepository;
+import com.songspasssta.memberservice.domain.repository.RewardRepository;
 import com.songspasssta.memberservice.dto.request.SignupRequest;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
-import com.songspasssta.memberservice.dto.response.SignupResponse;
+import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +26,7 @@ public class MemberService {
     private final KakaoLoginService kakaoLoginService;
     private final NaverLoginService naverLoginService;
     private final MemberRepository memberRepository;
+    private final RewardRepository rewardRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
 
@@ -77,13 +76,27 @@ public class MemberService {
         );
     }
 
-    public SignupResponse completeSignup(final Long memberId, final SignupRequest signupRequest) {
+    public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest) {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
         // TODO Multipart 연결
         member.updateMember(signupRequest.getNickname(), null);
 
-        return SignupResponse.of(member);
+        return MemberInfoResponse.of(member);
+    }
+
+    public MemberInfoResponse getProfile(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
+
+        return MemberInfoResponse.of(member);
+    }
+
+    // TODO 어떤 로직에 넣을지 생각 필요
+    private Reward createReward(final Member member) {
+        final Reward reward = new Reward(member);
+
+        return rewardRepository.save(reward);
     }
 }
