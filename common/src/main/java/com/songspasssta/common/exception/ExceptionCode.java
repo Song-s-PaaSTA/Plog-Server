@@ -21,6 +21,8 @@ public enum ExceptionCode {
     EXPIRED_REFRESH_TOKEN(2004, "만료된 AccessToken입니다."),
     EXPIRED_ACCESS_TOKEN(2005, "만료된 RefreshToken입니다."),
 
+    NOT_FOUND_REWARD(3000, "멤버 아이디에 해당하는 리워드가 존재하지 않습니다."),
+
     INTERNAL_SEVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;

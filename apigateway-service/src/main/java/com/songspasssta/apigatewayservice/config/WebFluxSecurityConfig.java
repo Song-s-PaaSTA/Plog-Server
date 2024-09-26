@@ -13,7 +13,7 @@ import org.springframework.security.web.server.authorization.AuthorizationContex
 public class WebFluxSecurityConfig {
 
     private final static String[] PERMIT_ALL_ANTPATTERNS = {
-            "/member-service/api/v1/**", "/csrf"
+            "/member-service/api/v1/**", "/csrf", "/swagger-ui/**", "/v3/api-docs/**"
     };
 
     @Bean
