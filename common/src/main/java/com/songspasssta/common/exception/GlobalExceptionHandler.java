@@ -48,4 +48,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(new ExceptionResponse(INTERNAL_SEVER_ERROR.getCode(), INTERNAL_SEVER_ERROR.getMessage()));
     }
+    @ExceptionHandler(FileUploadException.class)
+    public ResponseEntity<ExceptionResponse> handleFileUploadException(FileUploadException e) {
+        log.error("FileUploadException: {}", e.getMessage());
+        return ResponseEntity
+                .status(400)
+                .body(new ExceptionResponse(e.getCode(), e.getMessage()));
+    }
 }
