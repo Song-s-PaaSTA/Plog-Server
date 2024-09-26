@@ -26,7 +26,7 @@ public class Reward extends BaseEntity {
     @Column(nullable = false)
     private Integer score;
 
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "reward")
+    @OneToOne(mappedBy = "reward")
     private Member member;
 
     public Reward(final Member member) {

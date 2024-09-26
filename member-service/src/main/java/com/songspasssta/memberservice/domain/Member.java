@@ -40,7 +40,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false)
     private String socialLoginId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "reward_id")
     private Reward reward;
 
