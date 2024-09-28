@@ -1,4 +1,4 @@
-package com.songspasssta.trashservice.entity;
+package com.songspasssta.trashservice.domain;
 
 import com.songspasssta.common.BaseEntity;
 import jakarta.persistence.Column;
