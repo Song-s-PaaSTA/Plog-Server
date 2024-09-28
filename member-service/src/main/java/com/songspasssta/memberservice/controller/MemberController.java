@@ -75,7 +75,9 @@ public class MemberController {
         return ResponseEntity.noContent().build();
     }
 
-
-
-
+    @DeleteMapping("/signout")
+    public ResponseEntity<Void> signout(@Auth final Accessor accessor) {
+        memberService.signout(accessor.getMemberId());
+        return ResponseEntity.noContent().build();
+    }
 }

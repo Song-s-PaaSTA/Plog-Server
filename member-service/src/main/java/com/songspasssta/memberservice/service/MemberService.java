@@ -1,6 +1,8 @@
 package com.songspasssta.memberservice.service;
 
 import com.songspasssta.common.exception.BadRequestException;
+import com.songspasssta.memberservice.client.PloggingClientService;
+import com.songspasssta.memberservice.client.ReportClientService;
 import com.songspasssta.memberservice.config.TokenExtractor;
 import com.songspasssta.memberservice.config.TokenProvider;
 import com.songspasssta.memberservice.domain.*;
@@ -31,6 +33,8 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
     private final TokenExtractor tokenExtractor;
+    private final PloggingClientService ploggingClientService;
+    private final ReportClientService reportClientService;
 
     public LoginResponse login(final String provider, final String code) {
         if (provider.equals(KAKAO.getCode())) {
@@ -113,7 +117,8 @@ public class MemberService {
     }
 
     public void signout(final Long memberId) {
-        final String refreshToken = tokenExtractor.getRefreshToken();
+        reportClientService.deleteAllByMemberId(memberId);
+        ploggingClientService.deleteAllByMemberId(memberId);
         memberRepository.deleteById(memberId);
     }
 
