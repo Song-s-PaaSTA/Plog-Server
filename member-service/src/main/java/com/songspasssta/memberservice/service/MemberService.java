@@ -1,20 +1,21 @@
 package com.songspasssta.memberservice.service;
 
 import com.songspasssta.common.exception.BadRequestException;
+import com.songspasssta.memberservice.config.TokenExtractor;
 import com.songspasssta.memberservice.config.TokenProvider;
 import com.songspasssta.memberservice.domain.*;
 import com.songspasssta.memberservice.domain.repository.MemberRepository;
 import com.songspasssta.memberservice.domain.repository.RefreshTokenRepository;
 import com.songspasssta.memberservice.domain.repository.RewardRepository;
 import com.songspasssta.memberservice.dto.request.SignupRequest;
+import com.songspasssta.memberservice.dto.response.AccessTokenResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.songspasssta.common.exception.ExceptionCode.FAIL_TO_SOCIAL_LOGIN;
-import static com.songspasssta.common.exception.ExceptionCode.NOT_FOUND_MEMBER_ID;
+import static com.songspasssta.common.exception.ExceptionCode.*;
 import static com.songspasssta.memberservice.domain.type.SocialLoginType.KAKAO;
 import static com.songspasssta.memberservice.domain.type.SocialLoginType.NAVER;
 
@@ -29,6 +30,7 @@ public class MemberService {
     private final RewardRepository rewardRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final TokenProvider tokenProvider;
+    private final TokenExtractor tokenExtractor;
 
     public LoginResponse login(final String provider, final String code) {
         if (provider.equals(KAKAO.getCode())) {
@@ -91,6 +93,28 @@ public class MemberService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
         return MemberInfoResponse.of(member);
+    }
+
+    public AccessTokenResponse renewAccessToken(final Long memberId) {
+        final String accessToken = tokenExtractor.getAccessToken();
+        final String refreshToken = tokenExtractor.getRefreshToken();
+        if (tokenProvider.isValidRefreshAndValidAccess(refreshToken, accessToken)) {
+            final String newAccessToken = tokenProvider.generateAccessToken(memberId.toString());
+            return new AccessTokenResponse(newAccessToken);
+        } else if (tokenProvider.isValidRefreshAndInvalidAccess(refreshToken, accessToken)) {
+            throw new BadRequestException(INVALID_ACCESS_TOKEN);
+        }
+        return new AccessTokenResponse(accessToken);
+    }
+
+    public void logout() {
+        final String refreshToken = tokenExtractor.getRefreshToken();
+        refreshTokenRepository.deleteById(refreshToken);
+    }
+
+    public void signout(final Long memberId) {
+        final String refreshToken = tokenExtractor.getRefreshToken();
+        memberRepository.deleteById(memberId);
     }
 
     // TODO 어떤 로직에 넣을지 생각 필요
