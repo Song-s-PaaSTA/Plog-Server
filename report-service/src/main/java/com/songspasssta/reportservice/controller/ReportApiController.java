@@ -119,8 +119,8 @@ public class ReportApiController {
         return reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
     }
 
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deleteAllByMemberId(@PathVariable("memberId") final Long memberId) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAllByMemberId(@RequestParam("memberId") final Long memberId) {
         reportService.deleteAllByMemberId(memberId);
         return ResponseEntity.noContent().build();
     }

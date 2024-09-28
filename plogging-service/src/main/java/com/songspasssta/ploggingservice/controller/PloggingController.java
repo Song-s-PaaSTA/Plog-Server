@@ -4,8 +4,8 @@ import com.songspasssta.ploggingservice.service.PloggingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -15,8 +15,8 @@ public class PloggingController {
 
     private final PloggingService ploggingService;
 
-    @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deleteByMemberId(@PathVariable("memberId") final Long memberId) {
+    @DeleteMapping
+    public ResponseEntity<Void> deleteByMemberId(@RequestParam("memberId") final Long memberId) {
         ploggingService.deleteAllByMemberId(memberId);
         return ResponseEntity.noContent().build();
     }
