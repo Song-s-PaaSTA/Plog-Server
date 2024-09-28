@@ -1,4 +1,4 @@
-package com.songspasssta.ploggingservice.entity;
+package com.songspasssta.ploggingservice.domain;
 
 import com.songspasssta.common.BaseEntity;
 import jakarta.persistence.Column;

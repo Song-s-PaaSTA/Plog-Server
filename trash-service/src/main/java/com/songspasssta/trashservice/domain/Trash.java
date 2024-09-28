@@ -1,15 +1,15 @@
-package com.songspasssta.memberservice.entity;
+package com.songspasssta.trashservice.domain;
 
 import com.songspasssta.common.BaseEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -18,22 +18,22 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @DynamicInsert
 @NoArgsConstructor(access = PROTECTED)
-@SQLDelete(sql = "UPDATE member SET status = 'DELETED' where id = ?")
+@SQLDelete(sql = "UPDATE trash SET status = 'DELETED' where id = ?")
 @SQLRestriction("status = 'ACTIVE'")
-public class Member extends BaseEntity {
+public class Trash extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String nickname;
+    private Float latitude;
 
     @Column(nullable = false)
-    private String email;
+    private Float longitude;
 
-    private String profileImageUrl;
+    @Column(nullable = false)
+    private String roadAddr;
 
-    @OneToMany(mappedBy = "member")
-    private List<Reward> rewards = new ArrayList<>();
+    private String placeInfo;
 }
