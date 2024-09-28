@@ -10,6 +10,7 @@ import com.songspasssta.reportservice.service.ReportService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -116,5 +117,11 @@ public class ReportApiController {
                                           @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) { // 새 이미지는 필수 아님
         // TODO request header로 토큰 받기
         return reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
+    }
+
+    @DeleteMapping("/{memberId}")
+    public ResponseEntity<Void> deleteAllByMemberId(@PathVariable("memberId") final Long memberId) {
+        reportService.deleteAllByMemberId(memberId);
+        return ResponseEntity.noContent().build();
     }
 }
