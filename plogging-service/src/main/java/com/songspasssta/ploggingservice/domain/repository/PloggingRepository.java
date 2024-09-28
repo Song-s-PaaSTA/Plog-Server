@@ -1,0 +1,7 @@
+package com.songspasssta.ploggingservice.domain.repository;
+
+import com.songspasssta.ploggingservice.entity.Plogging;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PloggingRepository extends JpaRepository<Plogging, Long> {
+}
