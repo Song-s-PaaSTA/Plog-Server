@@ -16,8 +16,8 @@ public class PloggingController {
     private final PloggingService ploggingService;
 
     @DeleteMapping("/{memberId}")
-    public ResponseEntity<Void> deletePlogging(@PathVariable final Long memberId) {
-        ploggingService.deletePlogging(memberId);
+    public ResponseEntity<Void> deleteByMemberId(@PathVariable("memberId") final Long memberId) {
+        ploggingService.deleteAllByMemberId(memberId);
         return ResponseEntity.noContent().build();
     }
 }

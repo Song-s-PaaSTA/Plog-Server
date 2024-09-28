@@ -12,7 +12,7 @@ public class PloggingService {
 
     private final PloggingRepository ploggingRepository;
 
-    public void deletePlogging(final Long memberId) {
+    public void deleteAllByMemberId(final Long memberId) {
         ploggingRepository.deleteByMemberId(memberId);
     }
 }
