@@ -1,12 +1,11 @@
 package com.songspasssta.ploggingservice.controller;
 
+import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.service.PloggingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -14,6 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class PloggingController {
 
     private final PloggingService ploggingService;
+
+    @PostMapping("/proof")
+    public ResponseEntity<Void> savePlogging(
+            @RequestParam("memberId") final Long memberId,
+            @RequestBody @Valid final PloggingRequest ploggingRequest
+    ) {
+        ploggingService.savePlogging(memberId, ploggingRequest);
+        return ResponseEntity.noContent().build();
+    }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteByMemberId(@RequestParam("memberId") final Long memberId) {

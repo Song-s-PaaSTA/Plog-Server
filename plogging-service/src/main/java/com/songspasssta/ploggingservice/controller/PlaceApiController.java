@@ -1,6 +1,6 @@
 package com.songspasssta.ploggingservice.controller;
 
-import com.songspasssta.ploggingservice.dto.PlaceResponseDto;
+import com.songspasssta.ploggingservice.dto.response.PlaceResponseDto;
 import com.songspasssta.ploggingservice.service.PlaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
