@@ -1,4 +1,4 @@
-package com.songspasssta.ploggingservice.dto;
+package com.songspasssta.ploggingservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
