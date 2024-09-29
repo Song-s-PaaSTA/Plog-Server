@@ -3,7 +3,7 @@ package com.songspasssta.ploggingservice.service;
 import com.songspasssta.ploggingservice.domain.Plogging;
 import com.songspasssta.ploggingservice.domain.repository.PloggingRepository;
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
-import com.songspasssta.ploggingservice.dto.response.PloggingResponse;
+import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -35,8 +35,8 @@ public class PloggingService {
         ploggingRepository.save(plogging);
     }
 
-    public PloggingResponse getAllPloggingByMemberId(final Long memberId, final Pageable pageable) {
+    public PloggingListResponse getAllPloggingByMemberId(final Long memberId, final Pageable pageable) {
         final Slice<Plogging> plogging = ploggingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
-        return
+        return PloggingListResponse.of(plogging);
     }
 }
