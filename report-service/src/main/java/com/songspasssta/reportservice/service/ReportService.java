@@ -3,6 +3,7 @@ package com.songspasssta.reportservice.service;
 import com.songspasssta.common.exception.EntityNotFoundException;
 import com.songspasssta.common.exception.ExceptionCode;
 import com.songspasssta.common.exception.FileUploadException;
+import com.songspasssta.reportservice.client.RewardClient;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
@@ -11,10 +12,8 @@ import com.songspasssta.reportservice.domain.type.RegionType;
 import com.songspasssta.reportservice.domain.type.ReportType;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequestDto;
-import com.songspasssta.reportservice.dto.response.MyReportListResponseDto;
-import com.songspasssta.reportservice.dto.response.ReportDetailResponseDto;
-import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
-import com.songspasssta.reportservice.dto.response.ReportResponseDto;
+import com.songspasssta.reportservice.dto.response.*;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,10 +35,10 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final BookmarkRepository bookmarkRepository;
     private final S3Service s3Service;
+    private final RewardClient rewardClient; // Feign Client 의존성 주입
 
     @Transactional
     public ReportResponseDto save(Long memberId, ReportSaveRequestDto requestDto, MultipartFile reportImgFile) {
-        // TODO 리워드 증가
         // 이미지 파일 업로드 및 URL 생성
         String imageUrl = null;
         if (reportImgFile != null && !reportImgFile.isEmpty()) {
@@ -63,6 +61,18 @@ public class ReportService {
 
         // report 객체 저장
         Report savedReport = reportRepository.save(requestDto.toEntity(memberId));
+
+        // 리워드 증가 API 호출
+        try {
+            rewardClient.increaseScore(memberId);
+            log.info("리워드가 성공적으로 증가했습니다. memberId: {}", memberId);
+        } catch (FeignException.BadRequest e) {
+            log.error("잘못된 요청입니다: {}", e.getMessage());
+        } catch (FeignException e) {
+            log.error("Feign 클라이언트 오류 발생: {}", e);
+        } catch (Exception e) {
+            log.error("리워드 증가 실패: {}", e);
+        }
 
         return new ReportResponseDto(savedReport);
     }
@@ -208,6 +218,7 @@ public class ReportService {
         // 연관된 북마크 삭제
         bookmarkRepository.deleteAllByReportId(reportId);
 
+        // s3에서 신고글 이미지 삭제
         extracted(report.getReportImgUrl());
 
         // 신고글 삭제 (소프트 삭제로 상태 변경)
@@ -231,7 +242,7 @@ public class ReportService {
     }
 
     /**
-     * 신고글 삭제
+     * 신고글 수정
      *
      * @param reportId      신고글 번호
      * @param memberId      사용자 번호
