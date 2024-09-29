@@ -12,12 +12,13 @@ import java.util.List;
 public class RewardListResponse {
 
     private final List<MemberRewardResponse> rewards;
+    private final boolean hasNext;
 
     public static final RewardListResponse of(final Slice<Reward> rewards) {
         final List<MemberRewardResponse> memberRewardResponses = rewards.stream()
                 .map(reward -> MemberRewardResponse.of(reward))
                 .toList();
 
-        return new RewardListResponse(memberRewardResponses);
+        return new RewardListResponse(memberRewardResponses, rewards.hasNext());
     }
 }
