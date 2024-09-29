@@ -23,6 +23,9 @@ public enum ExceptionCode {
 
     NOT_FOUND_REWARD(3000, "멤버 아이디에 해당하는 리워드가 존재하지 않습니다."),
 
+    NAVER_API_ERROR(4000, "네이버 API 호출 중 오류가 발생하였습니다."),
+    INVALID_API_RESPONSE(4001, "네이버 API로부터 유효하지 않은 응답을 받았습니다."),
+
     INTERNAL_SEVER_ERROR(9999, "서버에서 에러가 발생하였습니다.");
 
     private final int code;
