@@ -63,7 +63,7 @@ public class MemberController {
         return ResponseEntity.ok().body(memberInfoResponse);
     }
 
-    @PutMapping("/renew")
+    @PostMapping("/renew")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(@Auth final Accessor accessor) {
         final AccessTokenResponse accessTokenResponse = memberService.renewAccessToken(accessor.getMemberId());
         return ResponseEntity.ok().body(accessTokenResponse);

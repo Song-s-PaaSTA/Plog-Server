@@ -20,6 +20,7 @@ public enum ExceptionCode {
     INVALID_ACCESS_TOKEN(2003, "유효하지 않은 AccessToken입니다."),
     EXPIRED_REFRESH_TOKEN(2004, "만료된 AccessToken입니다."),
     EXPIRED_ACCESS_TOKEN(2005, "만료된 RefreshToken입니다."),
+    FAIL_TO_RENEW_ACCESS_TOKEN(2006, "Access Token 재발급에 실패했습니다."),
 
     NOT_FOUND_REWARD(3000, "멤버 아이디에 해당하는 리워드가 존재하지 않습니다."),
 

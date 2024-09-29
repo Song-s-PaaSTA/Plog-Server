@@ -103,12 +103,12 @@ public class MemberService {
         final String accessToken = tokenExtractor.getAccessToken();
         final String refreshToken = tokenExtractor.getRefreshToken();
         if (tokenProvider.isValidRefreshAndValidAccess(refreshToken, accessToken)) {
+            return new AccessTokenResponse(accessToken);
+        } else if (tokenProvider.isValidRefreshAndInvalidAccess(refreshToken, accessToken)) {
             final String newAccessToken = tokenProvider.generateAccessToken(memberId.toString());
             return new AccessTokenResponse(newAccessToken);
-        } else if (tokenProvider.isValidRefreshAndInvalidAccess(refreshToken, accessToken)) {
-            throw new BadRequestException(INVALID_ACCESS_TOKEN);
         }
-        return new AccessTokenResponse(accessToken);
+        throw new BadRequestException(FAIL_TO_RENEW_ACCESS_TOKEN);
     }
 
     public void logout() {
