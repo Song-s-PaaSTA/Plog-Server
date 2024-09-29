@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.util.Objects;
 
-import static com.songspasssta.common.exception.ExceptionCode.INTERNAL_SEVER_ERROR;
+import static com.songspasssta.common.exception.ExceptionCode.INTERNAL_SERVER_ERROR;
 import static com.songspasssta.common.exception.ExceptionCode.INVALID_REQUEST;
 
 @RestControllerAdvice
@@ -46,8 +46,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error(e.getMessage(), e);
 
         return ResponseEntity.internalServerError()
-                .body(new ExceptionResponse(INTERNAL_SEVER_ERROR.getCode(), INTERNAL_SEVER_ERROR.getMessage()));
+                .body(new ExceptionResponse(INTERNAL_SERVER_ERROR.getCode(), INTERNAL_SERVER_ERROR.getMessage()));
     }
+
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<ExceptionResponse> handleFileUploadException(FileUploadException e) {
         log.error("FileUploadException: {}", e.getMessage());
