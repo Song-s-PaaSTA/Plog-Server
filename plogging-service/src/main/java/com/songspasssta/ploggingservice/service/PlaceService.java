@@ -48,7 +48,7 @@ public class PlaceService {
             throw new NaverApiException(ExceptionCode.NAVER_API_ERROR, e);
         } catch (Exception e) {
             log.error("알 수 없는 오류: {}", e.getMessage(), e);
-            throw new NaverApiException(ExceptionCode.INTERNAL_SEVER_ERROR, e);
+            throw new NaverApiException(ExceptionCode.INTERNAL_SERVER_ERROR, e);
         }
     }
 }
