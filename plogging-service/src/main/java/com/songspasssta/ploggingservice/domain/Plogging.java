@@ -43,3 +43,4 @@ public class Plogging extends BaseEntity {
     @Column(nullable = false)
     private LocalTime ploggingTime;
 }
+
