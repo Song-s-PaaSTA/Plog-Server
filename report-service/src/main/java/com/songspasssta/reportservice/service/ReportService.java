@@ -64,8 +64,7 @@ public class ReportService {
 
         // 리워드 증가 API 호출
         try {
-            RewardResponseDto rewardResponseDto = rewardClient.increaseReward(memberId);
-            log.info(rewardResponseDto.toString());
+            rewardClient.increaseScore(memberId);
             log.info("리워드가 성공적으로 증가했습니다. memberId: {}", memberId);
         } catch (FeignException.BadRequest e) {
             log.error("잘못된 요청입니다: {}", e.getMessage());

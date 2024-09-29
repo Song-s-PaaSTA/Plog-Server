@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class RewardResponseDto {
+public class RewardResponse {
 
     final Integer score;
 }
