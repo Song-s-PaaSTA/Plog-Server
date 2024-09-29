@@ -16,4 +16,6 @@ public interface ReportRepository extends JpaRepository<Report, Long>, JpaSpecif
      */
     @Query("SELECT r FROM Report r WHERE r.memberId = :memberId AND r.reportType <> 'DELETED'")
     List<Report> findAllByMemberId(@Param("memberId") Long memberId);
+
+    void deleteByMemberId(final Long memberId);
 }

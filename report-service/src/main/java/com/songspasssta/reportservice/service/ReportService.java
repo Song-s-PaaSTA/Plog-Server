@@ -272,4 +272,9 @@ public class ReportService {
         // 저장된 데이터 반환
         return new ReportResponseDto(report);
     }
+
+    @Transactional
+    public void deleteAllByMemberId(final Long memberId) {
+        reportRepository.deleteByMemberId(memberId);
+    }
 }

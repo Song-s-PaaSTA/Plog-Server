@@ -3,6 +3,7 @@ package com.songspasssta.memberservice.controller;
 import com.songspasssta.memberservice.domain.Accessor;
 import com.songspasssta.memberservice.domain.Auth;
 import com.songspasssta.memberservice.dto.request.SignupRequest;
+import com.songspasssta.memberservice.dto.response.AccessTokenResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
 import com.songspasssta.memberservice.service.MemberService;
@@ -60,5 +61,23 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> getProfile(@Auth final Accessor accessor) {
         final MemberInfoResponse memberInfoResponse = memberService.getProfile(accessor.getMemberId());
         return ResponseEntity.ok().body(memberInfoResponse);
+    }
+
+    @PostMapping("/renew")
+    public ResponseEntity<AccessTokenResponse> renewAccessToken(@Auth final Accessor accessor) {
+        final AccessTokenResponse accessTokenResponse = memberService.renewAccessToken(accessor.getMemberId());
+        return ResponseEntity.ok().body(accessTokenResponse);
+    }
+
+    @DeleteMapping("/logout")
+    public ResponseEntity<Void> logout(@Auth final Accessor accessor) {
+        memberService.logout();
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/signout")
+    public ResponseEntity<Void> signout(@Auth final Accessor accessor) {
+        memberService.signout(accessor.getMemberId());
+        return ResponseEntity.noContent().build();
     }
 }
