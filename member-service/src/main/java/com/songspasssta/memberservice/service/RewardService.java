@@ -3,8 +3,11 @@ package com.songspasssta.memberservice.service;
 import com.songspasssta.common.exception.BadRequestException;
 import com.songspasssta.memberservice.domain.Reward;
 import com.songspasssta.memberservice.domain.repository.RewardRepository;
+import com.songspasssta.memberservice.dto.response.RewardListResponse;
 import com.songspasssta.memberservice.dto.response.RewardResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +19,11 @@ import static com.songspasssta.common.exception.ExceptionCode.NOT_FOUND_REWARD;
 public class RewardService {
 
     private final RewardRepository rewardRepository;
+
+    public RewardListResponse getAllRewards(final Pageable pageable) {
+        final Slice<Reward> rewards = rewardRepository.findAll(pageable.previousOrFirst());
+        return RewardListResponse.of(rewards);
+    }
 
     public RewardResponse updateScore(final Long memberId) {
         final Reward reward = rewardRepository.findByMemberId(memberId)
