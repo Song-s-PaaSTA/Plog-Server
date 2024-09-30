@@ -6,6 +6,7 @@ import com.songspasssta.memberservice.dto.request.SignupRequest;
 import com.songspasssta.memberservice.dto.response.AccessTokenResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
+import com.songspasssta.memberservice.dto.response.PloggingListResponse;
 import com.songspasssta.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -65,6 +66,12 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> getProfile(@Auth final Accessor accessor) {
         final MemberInfoResponse memberInfoResponse = memberService.getProfile(accessor.getMemberId());
         return ResponseEntity.ok().body(memberInfoResponse);
+    }
+
+    @GetMapping("/plogging")
+    public ResponseEntity<PloggingListResponse> getAllPlogging(@Auth final Accessor accessor) {
+        final PloggingListResponse ploggingListResponse = memberService.getAllPlogging(accessor.getMemberId());
+        return ResponseEntity.ok().body(ploggingListResponse);
     }
 
     @PostMapping("/renew")

@@ -13,6 +13,7 @@ import com.songspasssta.memberservice.dto.request.SignupRequest;
 import com.songspasssta.memberservice.dto.response.AccessTokenResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
+import com.songspasssta.memberservice.dto.response.PloggingListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -113,6 +114,11 @@ public class MemberService {
             return new AccessTokenResponse(newAccessToken);
         }
         throw new BadRequestException(FAIL_TO_RENEW_ACCESS_TOKEN);
+    }
+
+    public PloggingListResponse getAllPlogging(final Long memberId) {
+        final PloggingListResponse ploggingListResponse = ploggingClientService.getMemberPlogging(memberId);
+        return ploggingListResponse;
     }
 
     public void logout() {
