@@ -16,6 +16,9 @@ import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.songspasssta.common.exception.ExceptionCode.*;
 import static com.songspasssta.memberservice.domain.type.SocialLoginType.KAKAO;
@@ -35,6 +38,7 @@ public class MemberService {
     private final TokenExtractor tokenExtractor;
     private final PloggingClientService ploggingClientService;
     private final ReportClientService reportClientService;
+    private final BucketService bucketService;
 
     public LoginResponse login(final String provider, final String code) {
         if (provider.equals(KAKAO.getCode())) {
@@ -82,12 +86,16 @@ public class MemberService {
         );
     }
 
-    public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest) {
+    public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest, final MultipartFile profileImage) throws IOException {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
-        // TODO Multipart 연결
-        member.updateMember(signupRequest.getNickname(), null);
+        if (profileImage == null) {
+            member.updateMember(signupRequest.getNickname(), null);
+        } else {
+            final String profileImageUrl = bucketService.upload(profileImage);
+            member.updateMember(signupRequest.getNickname(), profileImageUrl);
+        }
 
         return MemberInfoResponse.of(member);
     }

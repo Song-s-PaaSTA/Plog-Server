@@ -13,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Tag(name = "member", description = "멤버 API")
 @RestController
@@ -51,9 +54,10 @@ public class MemberController {
     @PatchMapping("/signup/complete")
     public ResponseEntity<MemberInfoResponse> completeSignup(
             @Auth final Accessor accessor,
-            @RequestBody @Valid final SignupRequest signupRequest
-    ) {
-        final MemberInfoResponse profileResponse = memberService.completeSignup(accessor.getMemberId(), signupRequest);
+            @RequestPart(value = "request") @Valid final SignupRequest signupRequest,
+            @RequestPart(value = "file", required = false) final MultipartFile profileImage
+    ) throws IOException {
+        final MemberInfoResponse profileResponse = memberService.completeSignup(accessor.getMemberId(), signupRequest, profileImage);
         return ResponseEntity.ok().body(profileResponse);
     }
 
