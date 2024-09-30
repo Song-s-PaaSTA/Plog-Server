@@ -32,12 +32,12 @@ public class SecurityConfig {
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/v1/**", "/webjars/**", "/member/v1/api-docs").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .defaultAuthenticationEntryPointFor(
                                 new HttpStatusEntryPoint(UNAUTHORIZED),
-                                new AntPathRequestMatcher("/api/** ")
+                                new AntPathRequestMatcher("/api/v1/**")
                         ))
                 .build();
     }
