@@ -31,7 +31,7 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/**", "/webjars/**", "/member/v1/api-docs").permitAll()
+                        .requestMatchers("/webjars/**", "/member/v1/api-docs", "/api/v1/login/**", "/api/v1/renew").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
