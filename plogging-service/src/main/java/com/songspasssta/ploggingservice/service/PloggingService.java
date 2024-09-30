@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -16,19 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class PloggingService {
 
     private final PloggingRepository ploggingRepository;
+    private final BucketService bucketService;
 
     public void deleteAllByMemberId(final Long memberId) {
         ploggingRepository.deleteByMemberId(memberId);
     }
 
-    public void savePlogging(final Long memberId, final PloggingRequest ploggingRequest) {
+    public void savePlogging(final Long memberId, final PloggingRequest ploggingRequest, final MultipartFile ploggingImage) throws IOException {
 
-        // TODO image url 저장 로직 필요
+        final String ploggingImageUrl = bucketService.upload(ploggingImage);
+
         final Plogging plogging = new Plogging(
                 memberId,
                 ploggingRequest.getStartRoadAddr(),
                 ploggingRequest.getEndRoadAddr(),
-                String.valueOf(1),
+                ploggingImageUrl,
                 ploggingRequest.getPloggingTime()
         );
 

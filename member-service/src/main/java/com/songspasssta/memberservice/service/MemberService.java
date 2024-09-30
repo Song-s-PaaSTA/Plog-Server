@@ -90,12 +90,8 @@ public class MemberService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
-        if (profileImage == null) {
-            member.updateMember(signupRequest.getNickname(), null);
-        } else {
-            final String profileImageUrl = bucketService.upload(profileImage);
-            member.updateMember(signupRequest.getNickname(), profileImageUrl);
-        }
+        final String profileImageUrl = bucketService.upload(profileImage);
+        member.updateMember(signupRequest.getNickname(), profileImageUrl);
 
         return MemberInfoResponse.of(member);
     }

@@ -6,6 +6,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,9 +20,10 @@ public class PloggingController {
     @PostMapping("/proof")
     public ResponseEntity<Void> savePlogging(
             @RequestParam("memberId") final Long memberId,
-            @RequestBody @Valid final PloggingRequest ploggingRequest
-    ) {
-        ploggingService.savePlogging(memberId, ploggingRequest);
+            @RequestPart(value = "request") @Valid final PloggingRequest ploggingRequest,
+            @RequestPart(value = "file", required = false) final MultipartFile ploggingImage
+    ) throws IOException {
+        ploggingService.savePlogging(memberId, ploggingRequest, ploggingImage);
         return ResponseEntity.noContent().build();
     }
 

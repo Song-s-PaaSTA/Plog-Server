@@ -55,7 +55,7 @@ public class MemberController {
     public ResponseEntity<MemberInfoResponse> completeSignup(
             @Auth final Accessor accessor,
             @RequestPart(value = "request") @Valid final SignupRequest signupRequest,
-            @RequestPart(value = "file", required = false) final MultipartFile profileImage
+            @RequestPart(value = "file") final MultipartFile profileImage
     ) throws IOException {
         final MemberInfoResponse profileResponse = memberService.completeSignup(accessor.getMemberId(), signupRequest, profileImage);
         return ResponseEntity.ok().body(profileResponse);
