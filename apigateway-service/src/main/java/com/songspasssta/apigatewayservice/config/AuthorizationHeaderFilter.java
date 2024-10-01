@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import static com.songspasssta.apigatewayservice.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
+import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
 @Component
 @Slf4j
