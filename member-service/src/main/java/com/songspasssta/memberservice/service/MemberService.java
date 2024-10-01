@@ -93,11 +93,13 @@ public class MemberService {
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
         final String profileImageUrl = bucketService.upload(profileImage);
-        member.updateMember(signupRequest.getNickname(), profileImageUrl);
+        final Reward reward = createReward(member);
 
-        createReward(member);
+        member.updateMember(reward, signupRequest.getNickname(), profileImageUrl);
 
-        return MemberInfoResponse.of(member);
+        final Member updatedMember = memberRepository.save(member);
+
+        return MemberInfoResponse.of(updatedMember);
     }
 
     public MemberInfoResponse getProfile(final Long memberId) {
