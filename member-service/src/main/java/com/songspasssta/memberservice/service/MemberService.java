@@ -51,23 +51,24 @@ public class MemberService {
     }
 
     private MemberInfo findOrCreateMember(final OauthMember oauthMember) {
-        return memberRepository.findBySocialLoginId(oauthMember.getSocialLoginId())
-                .map(member -> new MemberInfo(member, false))
+        final Member member = memberRepository.findBySocialLoginId(oauthMember.getSocialLoginId())
                 .orElseGet(() -> createMember(oauthMember));
+
+        if (member.getNickname() == null) {
+            return new MemberInfo(member, true);
+        }
+
+        return new MemberInfo(member, false);
     }
 
-    private MemberInfo createMember(final OauthMember oauthMember) {
+    private Member createMember(final OauthMember oauthMember) {
         final Member member = new Member(
-                oauthMember.getNickname(),
                 oauthMember.getEmail(),
-                oauthMember.getProfileImageUrl(),
                 oauthMember.getSocialLoginType(),
                 oauthMember.getSocialLoginId()
         );
 
-        final Member newMember = memberRepository.save(member);
-
-        return new MemberInfo(newMember, true);
+        return memberRepository.save(member);
     }
 
     private LoginResponse saveMember(final OauthMember oauthMember) {
@@ -93,6 +94,8 @@ public class MemberService {
 
         final String profileImageUrl = bucketService.upload(profileImage);
         member.updateMember(signupRequest.getNickname(), profileImageUrl);
+
+        createReward(member);
 
         return MemberInfoResponse.of(member);
     }
@@ -132,7 +135,6 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    // TODO 어떤 로직에 넣을지 생각 필요
     private Reward createReward(final Member member) {
         final Reward reward = new Reward(member);
 

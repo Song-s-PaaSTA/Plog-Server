@@ -45,15 +45,11 @@ public class Member extends BaseEntity {
     private Reward reward;
 
     public Member(
-            final String nickname,
             final String email,
-            final String profileImageUrl,
             final SocialLoginType socialLoginType,
             final String socialLoginId
     ) {
-        this.nickname = nickname;
         this.email = email;
-        this.profileImageUrl = profileImageUrl;
         this.socialLoginType = socialLoginType;
         this.socialLoginId = socialLoginId;
     }
