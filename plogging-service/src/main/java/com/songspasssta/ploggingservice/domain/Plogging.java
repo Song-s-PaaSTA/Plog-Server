@@ -42,5 +42,19 @@ public class Plogging extends BaseEntity {
 
     @Column(nullable = false)
     private LocalTime ploggingTime;
+
+    public Plogging(
+            final Long memberId,
+            final String startRoadAddr,
+            final String endRoadAddr,
+            final String ploggingImgUrl,
+            final LocalTime ploggingTime
+    ) {
+        this.memberId = memberId;
+        this.startRoadAddr = startRoadAddr;
+        this.endRoadAddr = endRoadAddr;
+        this.ploggingImgUrl = ploggingImgUrl;
+        this.ploggingTime = ploggingTime;
+    }
 }
 

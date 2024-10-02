@@ -15,14 +15,6 @@ public class KakaoMemberResponse {
 
     @Data
     public static class KakaoAccount {
-        private Profile profile;
         private String email;
-    }
-
-    @Data
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Profile {
-        private String nickname;
-        private String profileImageUrl;
     }
 }
