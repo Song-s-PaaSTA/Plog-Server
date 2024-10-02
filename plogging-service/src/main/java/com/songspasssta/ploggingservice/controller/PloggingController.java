@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
+import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
@@ -32,7 +33,7 @@ public class PloggingController {
 
     @PostMapping("/proof")
     public ResponseEntity<Void> savePlogging(
-            @RequestParam("memberId") final Long memberId,
+            @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @RequestPart(value = "request") @Valid final PloggingRequest ploggingRequest,
             @RequestPart(value = "file", required = false) final MultipartFile ploggingImage
     ) throws IOException {
