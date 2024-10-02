@@ -1,7 +1,9 @@
 package com.songspasssta.ploggingservice.controller;
 
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
+import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
+import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import com.songspasssta.ploggingservice.service.PloggingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,12 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class PloggingController {
 
     private final PloggingService ploggingService;
+
+    @GetMapping("/route")
+    public ResponseEntity<PloggingRouteResponse> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
+        final PloggingRouteResponse ploggingRouteResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
+        return ResponseEntity.ok().body(ploggingRouteResponse);
+    }
 
     @GetMapping
     public ResponseEntity<PloggingListResponse> getMemberPlogging(
