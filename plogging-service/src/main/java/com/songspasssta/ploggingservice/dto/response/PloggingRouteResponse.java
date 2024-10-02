@@ -1,9 +1,8 @@
 package com.songspasssta.ploggingservice.dto.response;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -17,12 +16,21 @@ public class PloggingRouteResponse {
     @Data
     public static class Feature {
         private String type;
-        private List<Geometry> geometry;
+        private Geometry geometry;
     }
 
     @Data
     public static class Geometry {
         private String type;
-        private List<List<Double>> coordinates;
+        private Object coordinates;
+
+        public List<List<Double>> getCoordinates() {
+            if ("Point".equals(type)) {
+                return Collections.singletonList((List<Double>) coordinates); // Point의 경우
+            } else if ("LineString".equals(type)) {
+                return (List<List<Double>>) coordinates;
+            }
+            return null;
+        }
     }
 }
