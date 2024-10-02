@@ -18,12 +18,9 @@ public class KakaoLoginService {
     public OauthMember login(final String accessToken) {
         final KakaoMemberResponse kakaoMemberResponse = loginApiClient.getKakaoMemberInfo("Bearer " + accessToken);
         final String socialLoginId = kakaoMemberResponse.getId().toString();
-        final KakaoMemberResponse.Profile profile = kakaoMemberResponse.getKakaoAccount().getProfile();
 
         return new OauthMember(
-                profile.getNickname(),
                 kakaoMemberResponse.getKakaoAccount().getEmail(),
-                profile.getProfileImageUrl(),
                 KAKAO,
                 socialLoginId
         );

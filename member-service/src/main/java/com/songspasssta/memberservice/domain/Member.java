@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String nickname;
 
     @Column(nullable = false)
@@ -45,23 +45,21 @@ public class Member extends BaseEntity {
     private Reward reward;
 
     public Member(
-            final String nickname,
             final String email,
-            final String profileImageUrl,
             final SocialLoginType socialLoginType,
             final String socialLoginId
     ) {
-        this.nickname = nickname;
         this.email = email;
-        this.profileImageUrl = profileImageUrl;
         this.socialLoginType = socialLoginType;
         this.socialLoginId = socialLoginId;
     }
 
     public void updateMember(
+            final Reward reward,
             final String nickname,
             final String profileImageUrl
     ) {
+        this.reward = reward;
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
     }

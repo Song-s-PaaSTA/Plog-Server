@@ -13,9 +13,13 @@ import com.songspasssta.memberservice.dto.request.SignupRequest;
 import com.songspasssta.memberservice.dto.response.AccessTokenResponse;
 import com.songspasssta.memberservice.dto.response.LoginResponse;
 import com.songspasssta.memberservice.dto.response.MemberInfoResponse;
+import com.songspasssta.memberservice.dto.response.PloggingListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 import static com.songspasssta.common.exception.ExceptionCode.*;
 import static com.songspasssta.memberservice.domain.type.SocialLoginType.KAKAO;
@@ -35,6 +39,7 @@ public class MemberService {
     private final TokenExtractor tokenExtractor;
     private final PloggingClientService ploggingClientService;
     private final ReportClientService reportClientService;
+    private final BucketService bucketService;
 
     public LoginResponse login(final String provider, final String code) {
         if (provider.equals(KAKAO.getCode())) {
@@ -46,23 +51,24 @@ public class MemberService {
     }
 
     private MemberInfo findOrCreateMember(final OauthMember oauthMember) {
-        return memberRepository.findBySocialLoginId(oauthMember.getSocialLoginId())
-                .map(member -> new MemberInfo(member, false))
+        final Member member = memberRepository.findBySocialLoginId(oauthMember.getSocialLoginId())
                 .orElseGet(() -> createMember(oauthMember));
+
+        if (member.getNickname() == null) {
+            return new MemberInfo(member, true);
+        }
+
+        return new MemberInfo(member, false);
     }
 
-    private MemberInfo createMember(final OauthMember oauthMember) {
+    private Member createMember(final OauthMember oauthMember) {
         final Member member = new Member(
-                oauthMember.getNickname(),
                 oauthMember.getEmail(),
-                oauthMember.getProfileImageUrl(),
                 oauthMember.getSocialLoginType(),
                 oauthMember.getSocialLoginId()
         );
 
-        final Member newMember = memberRepository.save(member);
-
-        return new MemberInfo(newMember, true);
+        return memberRepository.save(member);
     }
 
     private LoginResponse saveMember(final OauthMember oauthMember) {
@@ -82,14 +88,18 @@ public class MemberService {
         );
     }
 
-    public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest) {
+    public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest, final MultipartFile profileImage) throws IOException {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
-        // TODO Multipart 연결
-        member.updateMember(signupRequest.getNickname(), null);
+        final String profileImageUrl = bucketService.upload(profileImage);
+        final Reward reward = createReward(member);
 
-        return MemberInfoResponse.of(member);
+        member.updateMember(reward, signupRequest.getNickname(), profileImageUrl);
+
+        final Member updatedMember = memberRepository.save(member);
+
+        return MemberInfoResponse.of(updatedMember);
     }
 
     public MemberInfoResponse getProfile(final Long memberId) {
@@ -111,6 +121,11 @@ public class MemberService {
         throw new BadRequestException(FAIL_TO_RENEW_ACCESS_TOKEN);
     }
 
+    public PloggingListResponse getAllPlogging(final Long memberId) {
+        final PloggingListResponse ploggingListResponse = ploggingClientService.getMemberPlogging(memberId);
+        return ploggingListResponse;
+    }
+
     public void logout() {
         final String refreshToken = tokenExtractor.getRefreshToken();
         refreshTokenRepository.deleteById(refreshToken);
@@ -122,7 +137,6 @@ public class MemberService {
         memberRepository.deleteById(memberId);
     }
 
-    // TODO 어떤 로직에 넣을지 생각 필요
     private Reward createReward(final Member member) {
         final Reward reward = new Reward(member);
 

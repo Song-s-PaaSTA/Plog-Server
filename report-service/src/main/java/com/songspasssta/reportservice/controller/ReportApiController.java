@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
+
 /**
  * 신고글 API 컨트롤러
  */
@@ -35,7 +37,7 @@ public class ReportApiController {
      */
     @PostMapping(consumes = "multipart/form-data")
     @ResponseStatus(HttpStatus.CREATED)
-    public ReportResponseDto save(@RequestParam("memberId") Long memberId,
+    public ReportResponseDto save(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
                                   @RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
                                   @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
         // TODO request header로 토큰 받기
@@ -53,7 +55,7 @@ public class ReportApiController {
      */
     @GetMapping
     public List<ReportListResponseDto> findAllReports(
-            @RequestParam("memberId") Long memberId,
+            @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @RequestParam(value = "region", required = false) List<String> regions, // 지역 필터링
             @RequestParam(value = "sort", required = false) String sort, // 정렬 기준, 단일 값만 허용
             @RequestParam(value = "status", required = false) List<String> statuses // 상태 필터링
@@ -71,7 +73,7 @@ public class ReportApiController {
      */
     @GetMapping("/{reportId}")
     public ReportDetailResponseDto findReportById(@PathVariable("reportId") Long reportId,
-                                                  @RequestParam("memberId") Long memberId) {
+                                                  @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         // TODO request header로 토큰 받기
         return reportService.findReportById(reportId, memberId);
     }
@@ -84,7 +86,7 @@ public class ReportApiController {
      */
     @GetMapping("/mine")
     @ResponseStatus(HttpStatus.OK)
-    public List<MyReportListResponseDto> findMyReports(@RequestParam("memberId") Long memberId) {
+    public List<MyReportListResponseDto> findMyReports(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         return reportService.findMyReports(memberId);
     }
 
@@ -97,7 +99,7 @@ public class ReportApiController {
     @DeleteMapping("/{reportId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteReport(@PathVariable("reportId") Long reportId,
-                             @RequestParam("memberId") Long memberId) {
+                             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         reportService.deleteReport(reportId, memberId);
     }
 
@@ -112,7 +114,7 @@ public class ReportApiController {
     @PatchMapping("/{reportId}")
     @ResponseStatus(HttpStatus.OK)
     public ReportResponseDto updateReport(@PathVariable("reportId") Long reportId,
-                                          @RequestParam("memberId") Long memberId,
+                                          @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
                                           @RequestPart(value = "requestDto") @Valid ReportUpdateRequestDto requestDto,
                                           @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) { // 새 이미지는 필수 아님
         // TODO request header로 토큰 받기
