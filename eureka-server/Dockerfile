@@ -1,11 +1,11 @@
 # OpenJDK 17 베이스 이미지 사용
 FROM openjdk:17-jdk-alpine
 
-# 애플리케이션이 배포될 공통 디렉터리 생성
-RUN mkdir -p /usr/app/msa-attach-volume/messages
+# 애플리케이션이 배포될 독립 디렉터리 생성
+RUN mkdir -p /usr/app/eureka-server
 
 # 애플리케이션이 위치할 경로 환경 변수로 설정
-ENV APP_HOME=/usr/app/
+ENV APP_HOME=/usr/app/eureka-server
 
 # 작업 디렉터리를 설정
 WORKDIR $APP_HOME
