@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  labels:
+    env: development
+    tier: backend
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      env: development
+      tier: backend
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        env: development
+        tier: backend
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: songspasssta-plog-storage/apigateway:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: SERVER_PORT
+              value: "8000"  # application.yml에서 사용된 포트
+            - name: EUREKA_INSTANCE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configmap
+                  key: EUREKA_INSTANCE_HOSTNAME
+            - name: SPRING_CLOUD_CONFIG_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: backend-configmap
+                  key: SPRING_CLOUD_CONFIG_URI
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: apigateway-secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
+                  key: jwt-secret-key
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

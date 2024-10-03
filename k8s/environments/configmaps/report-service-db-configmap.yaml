@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: plogging-database-config
+data:
+  POSTGRES_HOST: "plogging-service-db-postgresql"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "plogging_service_db"

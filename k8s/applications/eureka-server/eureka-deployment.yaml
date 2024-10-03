@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eureka-deployment
+  labels:
+    env: development
+    tier: backend
+    app: eureka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      env: development
+      tier: backend
+      app: eureka
+  template:
+    metadata:
+      labels:
+        env: development
+        tier: backend
+        app: eureka
+    spec:
+      containers:
+        - name: eureka
+          image: songspasssta-plog-storage/eureka:latest
+          ports:
+            - containerPort: 8761
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

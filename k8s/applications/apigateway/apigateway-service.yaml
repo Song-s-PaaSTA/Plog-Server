@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+  labels:
+    env: development
+    tier: backend
+    app: apigateway
+spec:
+  type: NodePort
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30001
+  selector:
+    env: development
+    tier: backend
+    app: apigateway
