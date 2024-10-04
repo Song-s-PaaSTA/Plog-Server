@@ -5,6 +5,7 @@ import com.songspasssta.ploggingservice.domain.Plogging;
 import com.songspasssta.ploggingservice.domain.repository.PloggingRepository;
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
+import com.songspasssta.ploggingservice.dto.request.TMapRouteRequest;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,19 @@ public class PloggingService {
     }
 
     public PloggingRouteResponse getPloggingRoute(final PloggingRouteRequest ploggingRouteRequest) {
-        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey, ploggingRouteRequest);
+        final TMapRouteRequest tMapRouteRequest = new TMapRouteRequest(
+                ploggingRouteRequest.getStartX(),
+                ploggingRouteRequest.getStartY(),
+                ploggingRouteRequest.getEndX(),
+                ploggingRouteRequest.getEndY(),
+                String.valueOf(ploggingRouteRequest.getPassX()) + ',' + ploggingRouteRequest.getPassY(),
+                ploggingRouteRequest.getReqCoordType(),
+                ploggingRouteRequest.getResCoordType(),
+                ploggingRouteRequest.getStartName(),
+                ploggingRouteRequest.getEndName()
+        );
+
+        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey,tMapRouteRequest);
         return PloggingRouteResponse;
     }
 }

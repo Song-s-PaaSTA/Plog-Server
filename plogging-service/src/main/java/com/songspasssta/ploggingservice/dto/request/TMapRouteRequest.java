@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PloggingRouteRequest {
+public class TMapRouteRequest {
 
-    @NotNull(message = "출발지 경도를 입력해주세요.")
+    @NotNull(message = "출발지 경로를 입력해주세요.")
     private double startX;
 
     @NotNull(message = "출발지 위도를 입력해주세요.")
@@ -24,11 +24,8 @@ public class PloggingRouteRequest {
     @NotNull(message = "도착지 위도를 입력해주세요.")
     private double endY;
 
-    @NotNull(message = "경유지 경도를 입력해주세요.")
-    private double passX;
-
-    @NotNull(message = "경유지 위도를 입력해주세요.")
-    private double passY;
+    @NotBlank(message = "경유지를 입력해주세요. (경도,위도_경도,위도)")
+    private String passList;
 
     @NotBlank(message = "요청 좌표 타입을 입력해주세요. ('EPSG3857')")
     private String reqCoordType;
