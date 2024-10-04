@@ -18,4 +18,6 @@ COPY ${JAR_FILE} apigateway.jar
 EXPOSE 8000
 
 # Spring 프로파일을 동적으로 설정할 수 있도록 CMD 명령어 수정
-CMD ["java", "-Dspring.profiles.active=${profile:default}", "-jar", "apigateway.jar"]
+CMD ["java", "-Dspring.profiles.active=${SPRING_PROFILES_ACTIVE}", "-jar", "apigateway.jar"]
+
+ENV SPRING_PROFILES_ACTIVE=k8s
