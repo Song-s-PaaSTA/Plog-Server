@@ -14,4 +14,3 @@ spec:
     env: development
     tier: backend
     app: member-service
-#  type: LoadBalancer # 외부 IP 할당

@@ -23,6 +23,7 @@ spec:
       containers:
         - name: member-service
           image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:member-service-1.0.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:

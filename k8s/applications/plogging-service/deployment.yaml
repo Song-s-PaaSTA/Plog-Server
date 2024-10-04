@@ -23,6 +23,7 @@ spec:
       containers:
         - name: plogging-service
           image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:plogging-service-1.0.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
