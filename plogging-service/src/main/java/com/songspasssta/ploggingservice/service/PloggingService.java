@@ -54,7 +54,7 @@ public class PloggingService {
     }
 
     public PloggingRouteResponse getPloggingRoute(final PloggingRouteRequest ploggingRouteRequest) {
-        final PloggingRouteResponse ploggingRouteResponse = tMapClientService.getRoute(appKey, ploggingRouteRequest);
-        return ploggingRouteResponse;
+        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey, ploggingRouteRequest);
+        return PloggingRouteResponse;
     }
 }

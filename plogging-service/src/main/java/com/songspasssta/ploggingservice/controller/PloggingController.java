@@ -27,8 +27,8 @@ public class PloggingController {
 
     @GetMapping("/route")
     public ResponseEntity<PloggingRouteResponse> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
-        final PloggingRouteResponse ploggingRouteResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
-        return ResponseEntity.ok().body(ploggingRouteResponse);
+        final PloggingRouteResponse PloggingRouteResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
+        return ResponseEntity.ok().body(PloggingRouteResponse);
     }
 
     @GetMapping

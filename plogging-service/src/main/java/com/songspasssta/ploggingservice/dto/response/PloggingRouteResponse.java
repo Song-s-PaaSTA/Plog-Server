@@ -17,6 +17,7 @@ public class PloggingRouteResponse {
     public static class Feature {
         private String type;
         private Geometry geometry;
+        private Property properties;
     }
 
     @Data
@@ -26,11 +27,19 @@ public class PloggingRouteResponse {
 
         public List<List<Double>> getCoordinates() {
             if ("Point".equals(type)) {
-                return Collections.singletonList((List<Double>) coordinates); // Point의 경우
+                return Collections.singletonList((List<Double>) coordinates);
             } else if ("LineString".equals(type)) {
                 return (List<List<Double>>) coordinates;
             }
             return null;
         }
+    }
+
+    @Data
+    public static class Property {
+        private int index;
+        private String name;
+        private String description;
+        private String nextRoadName;
     }
 }
