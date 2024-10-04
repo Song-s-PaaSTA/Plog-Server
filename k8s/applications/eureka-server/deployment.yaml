@@ -25,6 +25,12 @@ spec:
           image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:eureka-server-1.0.0
           ports:
             - containerPort: 8761
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: config  # ConfigMap에서 TZ 값을 가져옴
+                  key: TZ
           readinessProbe:
             httpGet:
               path: /actuator/health

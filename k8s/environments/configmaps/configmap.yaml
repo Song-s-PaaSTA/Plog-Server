@@ -20,3 +20,7 @@ data:
 
   TRASH_POSTGRES_HOST: "trash-service-db-postgresql"
   TRASH_POSTGRES_DB: "trash_service_db"
+
+  TZ: "Asia/Seoul"  # 한국 시간대 추가
+
+
