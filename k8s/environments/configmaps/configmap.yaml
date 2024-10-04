@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+data:
+  EUREKA_INSTANCE_HOSTNAME: "eureka-server"
+  POSTGRES_PORT: "5432"
+
+  MEMBER_POSTGRES_HOST: "member-service-db-postgresql"
+  MEMBER_POSTGRES_DB: "member_service_db"
+
+  REDIS_HOST: "my-redis-master"
+  REDIS_PORT: "6379"
+
+  REPORT_POSTGRES_HOST: "report-service-db-postgresql"
+  REPORT_POSTGRES_DB: "report_service_db"
+
+  PLOGGING_POSTGRES_HOST: "plogging-service-db-postgresql"
+  PLOGGING_POSTGRES_DB: "plogging_service_db"
+
+  TRASH_POSTGRES_HOST: "trash-service-db-postgresql"
+  TRASH_POSTGRES_DB: "trash_service_db"

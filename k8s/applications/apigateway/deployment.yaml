@@ -22,28 +22,28 @@ spec:
     spec:
       containers:
         - name: apigateway
-          image: songspasssta-plog-storage/apigateway:latest
+          image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:apigateway-service-1.0.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
           env:
             - name: SERVER_PORT
-              value: "8000"  # application.yml에서 사용된 포트
+              value: "8000"  # application.yml에서사용된 포트
             - name: EUREKA_INSTANCE_HOSTNAME
               valueFrom:
                 configMapKeyRef:
-                  name: backend-configmap
+                  name: config
                   key: EUREKA_INSTANCE_HOSTNAME
-            - name: SPRING_CLOUD_CONFIG_URI
-              valueFrom:
-                configMapKeyRef:
-                  name: backend-configmap
-                  key: SPRING_CLOUD_CONFIG_URI
+#            - name: SPRING_CLOUD_CONFIG_URI
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: backend-configmap
+#                  key: SPRING_CLOUD_CONFIG_URI
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: apigateway-secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
-                  key: jwt-secret-key
+                  name: secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
+                  key: JWT-SECRET-KEY
           readinessProbe:
             httpGet:
               path: /actuator/health

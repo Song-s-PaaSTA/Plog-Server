@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: eureka
-          image: songspasssta-plog-storage/eureka:latest
+          image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:eureka-server-1.0.0
           ports:
             - containerPort: 8761
           readinessProbe:

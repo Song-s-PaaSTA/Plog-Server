@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: member-service
-          image: songspasssta-plog-storage/member-service:1.0.0
+          image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:member-service-1.0.0
           ports:
             - containerPort: 8080
           env:
@@ -31,48 +31,53 @@ spec:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: member-database-config
-                  key: POSTGRES_HOST
+                  name: config
+                  key: MEMBER_POSTGRES_HOST
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: member-database-config
+                  name: config
                   key: POSTGRES_PORT
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: member-database-config
-                  key: POSTGRES_DB
+                  name: config
+                  key: MEMBER_POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: member-database-secret
+                  name: secret
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: member-database-secret
+                  name: secret
                   key: POSTGRES_PASSWORD
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: member-database-config
+                  name: config
                   key: REDIS_HOST
             - name: REDIS_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: member-database-config
+                  name: config
                   key: REDIS_PORT
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: member-database-secret
+                  name: secret
                   key: REDIS_PASSWORD
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080 # production 환경 -> 80
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
+                  key: JWT-SECRET-KEY
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health
+#              port: 8080 # production 환경 -> 80
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#            successThreshold: 1
+#            failureThreshold: 3

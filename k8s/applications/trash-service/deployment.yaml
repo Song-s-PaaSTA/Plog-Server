@@ -1,28 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: report-service-deployment
+  name: trash-service-deployment
   labels:
     env: development
     tier: backend
-    app: report-service
+    app: trash-service
 spec:
   replicas: 1
   selector:
     matchLabels:
       env: development
       tier: backend
-      app: report-service
+      app: trash-service
   template:
     metadata:
       labels:
         env: development
         tier: backend
-        app: report-service
+        app: trash-service
     spec:
       containers:
-        - name: report-service
-          image: songspasssta-plog-storage/report-service:1.0.0
+        - name: trash-service
+          image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:trash-service-1.0.0
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
@@ -31,33 +32,27 @@ spec:
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
-                  name: report-database-config
-                  key: POSTGRES_HOST
+                  name: config
+                  key: TRASH_POSTGRES_HOST
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
-                  name: report-database-config
+                  name: config
                   key: POSTGRES_PORT
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
-                  name: report-database-config
-                  key: POSTGRES_DB
+                  name: config
+                  key: TRASH_POSTGRES_DB
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
-                  name: report-database-secret
+                  name: secret
                   key: POSTGRES_USER
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: report-database-secret
+                  name: secret
                   key: POSTGRES_PASSWORD
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
-            successThreshold: 1
-            failureThreshold: 3
+            - name: SPRING_PROFILES_ACTIVE
+              value: "k8s"
