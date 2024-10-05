@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "plogging-service", configuration = FeignConfig.class)
+@FeignClient(value = "plogging-service", url = "http://plogging-service.default.svc.cluster.local:8080", configuration = FeignConfig.class)
 public interface PloggingClientService {
 
     @GetMapping("/api/v1/plogging")
