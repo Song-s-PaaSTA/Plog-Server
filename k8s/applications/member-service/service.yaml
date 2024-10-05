@@ -7,6 +7,7 @@ metadata:
     tier: backend
     app: member-service
 spec:
+  type: ClusterIP
   ports:
     - port: 8080
       targetPort: 8080
