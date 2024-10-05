@@ -4,13 +4,13 @@ metadata:
   name: config
 data:
   EUREKA_INSTANCE_HOSTNAME: "eureka-server"
-  POSTGRES_PORT: "5432" # 새 포트 설정
+  POSTGRES_PORT: "5432" # TODO 새 포트 설정
 
   MEMBER_POSTGRES_HOST: "member-service-db-postgresql"
   MEMBER_POSTGRES_DB: "member_service_db"
 
   REDIS_HOST: "my-redis-master"
-  REDIS_PORT: "6379" # 새 포트 설정
+  REDIS_PORT: "6379" # TODO 새 포트 설정
 
   REPORT_POSTGRES_HOST: "report-service-db-postgresql"
   REPORT_POSTGRES_DB: "report_service_db"
