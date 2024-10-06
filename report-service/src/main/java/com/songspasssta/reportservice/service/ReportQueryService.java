@@ -26,14 +26,17 @@ public class ReportQueryService {
         Specification<Report> specification = Specification.where(null);
 
         if (regionTypes != null && !regionTypes.isEmpty()) {
+            log.info("선택한 지역 유형: {}", regionTypes);
             specification = addRegionTypeSpecification(specification, regionTypes);
         }
 
         if (reportTypes != null && !reportTypes.isEmpty()) {
+            log.info("선택한 신고 상태: {}", reportTypes);
             specification = addReportTypeSpecification(specification, reportTypes);
         }
 
         if (sort != null && !sort.isEmpty()) {
+            log.info("선택한 정렬 기준: {}", sort);
             specification = addSortSpecification(specification, sort);
         }
 
@@ -69,7 +72,10 @@ public class ReportQueryService {
         return switch (sort) {
             case "date" -> specification.and(ReportSpecification.orderByCreatedAt());
             case "popularity" -> specification.and(ReportSpecification.orderByBookmarkCount());
-            default -> specification;
+            default -> {
+                log.warn("알 수 없는 정렬 옵션: {}", sort);
+                yield specification;
+            }
         };
     }
 
@@ -77,6 +83,7 @@ public class ReportQueryService {
      * ReportListResponseDto로 변환
      */
     public List<ReportListResponseDto> convertToResponseDto(List<Report> reports, Long memberId, BookmarkRepository bookmarkRepository) {
+        log.info("memberId: {}에 대해 {}개의 신고글을 ReportListResponseDto로 변환 중", memberId, reports.size());
         return reports.stream()
                 .map(report -> new ReportListResponseDto(report, bookmarkRepository.existsByReportIdAndMemberId(report.getId(), memberId)))
                 .collect(Collectors.toList());

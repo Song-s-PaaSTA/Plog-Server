@@ -66,9 +66,11 @@ public class ReportService {
 
         // 신고글 저장
         Report savedReport = reportRepository.save(report);
+        log.info("신고글 저장 완료. 신고글 ID: {}", savedReport.getId());
 
         // 리워드 점수 증가
         rewardService.increaseRewardScore(memberId);
+        log.info("리워드 점수 증가. 회원 ID: {}", memberId);
 
         // 응답 DTO 생성
         return new ReportResponseDto(savedReport);
@@ -87,6 +89,7 @@ public class ReportService {
         Specification<Report> specification = reportQueryService.buildReportSpecification(regionTypes, reportTypes, sort);
         List<Report> reports = reportRepository.findAll(specification);
 
+        log.info("신고글 리스트 조회 완료. 조회된 신고글 수: {}", reports.size());
         return reportQueryService.convertToResponseDto(reports, memberId, bookmarkRepository);
     }
 
@@ -98,6 +101,7 @@ public class ReportService {
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.REPORT_NOT_FOUND, "ID가 " + reportId + "인 신고글을 찾을 수 없습니다."));
 
         boolean isBookmarkedByUser = checkIfBookmarkedByMember(reportId, memberId);
+        log.info("신고글 상세 조회 완료. 신고글 ID: {}, 회원 ID: {}", reportId, memberId);
         return new ReportDetailResponseDto(report, isBookmarkedByUser);
     }
 
@@ -113,6 +117,7 @@ public class ReportService {
      */
     public List<MyReportListResponseDto> findMyReports(Long memberId) {
         List<Report> reports = reportRepository.findAllByMemberId(memberId);
+        log.info("내가 작성한 신고글 조회 완료. 조회된 신고글 수: {}", reports.size());
         return reports.stream()
                 .map(MyReportListResponseDto::new)
                 .collect(Collectors.toList());
@@ -126,7 +131,7 @@ public class ReportService {
         Report report = validateReportAccess(reportId, memberId);
         bookmarkRepository.deleteAllByReportId(reportId);
         reportRepository.delete(report);
-//        fileService.deleteFile(report.getReportImgUrl()); // soft delete이므로 s3에서 신고글 이미지 삭제 x
+        log.info("신고글 삭제 완료. 신고글 ID: {}", reportId);
     }
 
     /**
@@ -142,6 +147,7 @@ public class ReportService {
         ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getInputReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
         report.updateDetails(requestDto.getReportDesc(), reportType, newImageUrl);
+        log.info("신고글 수정 완료. 신고글 ID: {}", reportId);
         return new ReportResponseDto(report);
     }
 
@@ -153,6 +159,7 @@ public class ReportService {
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.REPORT_NOT_FOUND, "ID가 " + reportId + "인 신고글을 찾을 수 없습니다."));
 
         if (!report.getMemberId().equals(memberId)) {
+            log.warn("접근 권한 없음. 신고글 ID: {}, 회원 ID: {}", reportId, memberId);
             throw new PermissionDeniedException(ExceptionCode.PERMISSION_DENIED, "ID가 " + memberId + "인 회원은 ID가 " + reportId + "인 신고글에 대한 접근 권한이 없습니다.");
         }
 
@@ -166,5 +173,6 @@ public class ReportService {
     public void deleteAllByMemberId(Long memberId) {
         reportRepository.deleteByMemberId(memberId);
         bookmarkRepository.deleteByMemberId(memberId);
+        log.info("회원이 작성한 모든 신고글 삭제 완료. 회원 ID: {}", memberId);
     }
 }

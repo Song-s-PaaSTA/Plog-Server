@@ -26,7 +26,7 @@ public class FileService {
             try {
                 return s3Service.upload(folder, file.getOriginalFilename(), file);
             } catch (IOException e) {
-                log.error("S3 업로드 실패: {}", e.getMessage());
+                log.error("S3 파일 업로드 실패 - 파일명: {}, 오류 메시지: {}", file.getOriginalFilename(), e.getMessage());
                 throw new FileOperationException(ExceptionCode.FILE_UPLOAD_ERROR);
             }
         }
@@ -41,7 +41,7 @@ public class FileService {
             try {
                 s3Service.delete(fileUrl);
             } catch (Exception e) {
-                log.error("S3에서 파일 삭제 실패: {}", e.getMessage());
+                log.error("S3 파일 삭제 실패 - 파일 URL: {}, 오류 메시지: {}", fileUrl, e.getMessage());
                 throw new FileOperationException(ExceptionCode.FILE_DELETE_ERROR);
             }
         }
