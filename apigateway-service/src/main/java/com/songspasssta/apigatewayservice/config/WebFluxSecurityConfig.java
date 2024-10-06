@@ -23,7 +23,7 @@ public class WebFluxSecurityConfig {
 
     private final static String[] PERMIT_ALL_ANTPATTERNS = {
             "/", "/csrf",
-            "/?*-service/actuator/?*", "/actuator/?*",
+            "/?*-service/actuator/?*", "/actuator/?*", "/?*-service/actuator/**",
             "/v3/api-docs/**", "/?*-service/v3/api-docs", "/swagger*/**", "/webjars/**"
     };
 
