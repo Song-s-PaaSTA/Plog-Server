@@ -32,9 +32,9 @@ public class BookmarkApiController {
      * 북마크 토글
      */
     @PostMapping("/{reportId}/bookmarks")
-    public ResponseEntity<Boolean> toggleBookmark(@PathVariable Long reportId,
+    public ResponseEntity<String> toggleBookmark(@PathVariable Long reportId,
                                                   @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
-        boolean bookmarkStatus = bookmarkService.toggleBookmark(reportId, memberId);
-        return ResponseEntity.ok(bookmarkStatus);
+        String responseMessage = bookmarkService.toggleBookmark(reportId, memberId);
+        return ResponseEntity.ok(responseMessage);
     }
 }
