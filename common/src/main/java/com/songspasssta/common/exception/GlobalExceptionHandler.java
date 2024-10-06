@@ -2,6 +2,7 @@ package com.songspasssta.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -48,12 +49,28 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.internalServerError()
                 .body(new ExceptionResponse(INTERNAL_SERVER_ERROR.getCode(), INTERNAL_SERVER_ERROR.getMessage()));
     }
-
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ExceptionResponse> handleFileUploadException(FileUploadException e) {
-        log.error("FileUploadException: {}", e.getMessage());
-        return ResponseEntity
-                .status(400)
-                .body(new ExceptionResponse(e.getCode(), e.getMessage()));
+    @ExceptionHandler(FileOperationException.class)
+    public ResponseEntity<ExceptionResponse> handleFileOperationException(final FileOperationException e) {
+        log.error("File Operation Exception: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ExceptionResponse(e.getExceptionCode().getCode(), e.getMessage()));
+    }
+    @ExceptionHandler(ApiClientException.class)
+    public ResponseEntity<ExceptionResponse> handleFeignClientException(final ApiClientException e) {
+        log.error("Feign Client Exception: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ExceptionResponse(e.getExceptionCode().getCode(), e.getMessage()));
+    }
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<ExceptionResponse> handleEntityNotFoundException(final EntityNotFoundException e) {
+        log.error("Entity Not Found: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ExceptionResponse(e.getExceptionCode().getCode(), e.getMessage()));
+    }
+    @ExceptionHandler(PermissionDeniedException.class)
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(final PermissionDeniedException e) {
+        log.error("Access Denied: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ExceptionResponse(ExceptionCode.PERMISSION_DENIED.getCode(), e.getMessage()));
     }
 }

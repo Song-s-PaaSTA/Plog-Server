@@ -15,7 +15,7 @@ import java.util.List;
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
 /**
- * 신고글 API 컨트롤러
+ * 신고글 API 컨트롤러 (CRUD)
  */
 @RequiredArgsConstructor
 @RestController

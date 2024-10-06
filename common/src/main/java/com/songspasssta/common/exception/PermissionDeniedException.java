@@ -3,15 +3,15 @@ package com.songspasssta.common.exception;
 import lombok.Getter;
 
 @Getter
-public class EntityNotFoundException extends RuntimeException {
+public class PermissionDeniedException extends RuntimeException {
     private final ExceptionCode exceptionCode;
 
-    public EntityNotFoundException(final ExceptionCode exceptionCode) {
+    public PermissionDeniedException(final ExceptionCode exceptionCode) {
         super(exceptionCode.getMessage());
         this.exceptionCode = exceptionCode;
     }
 
-    public EntityNotFoundException(final ExceptionCode exceptionCode, String message) {
+    public PermissionDeniedException(final ExceptionCode exceptionCode, String message) {
         super(message);
         this.exceptionCode = exceptionCode;
     }

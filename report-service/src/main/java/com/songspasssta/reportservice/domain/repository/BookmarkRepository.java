@@ -42,11 +42,5 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
      */
     void deleteAllByReportId(Long reportId);
 
-    /**
-     * 특정 신고글에 대한 북마크 수를 조회합니다.
-     *
-     * @param reportId 신고글 ID
-     * @return 북마크 수
-     */
-    long countByReportId(Long reportId);
+    void deleteByMemberId(Long memberId);
 }
