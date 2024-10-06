@@ -11,6 +11,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.songspasssta.common.exception.ExceptionCode.NOT_FOUND_REWARD;
 
 @Service
@@ -20,8 +22,8 @@ public class RewardService {
 
     private final RewardRepository rewardRepository;
 
-    public RewardListResponse getAllRewards(final Pageable pageable) {
-        final Slice<Reward> rewards = rewardRepository.findAll(pageable.previousOrFirst());
+    public RewardListResponse getAllRewards() {
+        final List<Reward> rewards = rewardRepository.findAll();
         return RewardListResponse.of(rewards);
     }
 
