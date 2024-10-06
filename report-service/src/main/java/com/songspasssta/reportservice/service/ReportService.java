@@ -44,19 +44,33 @@ public class ReportService {
      */
     @Transactional(rollbackFor = Exception.class)
     public ReportResponseDto save(Long memberId, ReportSaveRequestDto requestDto, MultipartFile reportImgFile) {
+        // 이미지 업로드 처리
         String imageUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
-        requestDto.setReportImgUrl(imageUrl);
 
+        // 도로명 주소에서 지역 추출
         RegionType regionType = RegionType.fromRoadAddr(requestDto.extractRegionFromAddr());
-        requestDto.setRegionType(regionType);
 
+        // 신고글 상태 설정
         ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getInputReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
-        requestDto.setReportType(reportType);
 
-        Report savedReport = reportRepository.save(requestDto.toEntity(memberId));
+        // Report 엔티티 생성
+        Report report = Report.builder()
+                .memberId(memberId)
+                .reportImgUrl(imageUrl)
+                .reportDesc(requestDto.getReportDesc())
+                .roadAddr(requestDto.getRoadAddr())
+                .regionType(regionType)
+                .reportType(reportType)
+                .build();
+
+        // 신고글 저장
+        Report savedReport = reportRepository.save(report);
+
+        // 리워드 점수 증가
         rewardService.increaseRewardScore(memberId);
 
+        // 응답 DTO 생성
         return new ReportResponseDto(savedReport);
     }
 
@@ -127,10 +141,7 @@ public class ReportService {
 
         ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getInputReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
-        report.setReportDesc(requestDto.getReportDesc());
-        report.setReportType(reportType);
-        report.setRoadAddr(newImageUrl);
-
+        report.updateDetails(requestDto.getReportDesc(), reportType, newImageUrl);
         return new ReportResponseDto(report);
     }
 

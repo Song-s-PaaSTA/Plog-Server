@@ -1,9 +1,6 @@
 package com.songspasssta.reportservice.dto.request;
 
-import com.songspasssta.reportservice.domain.Report;
-import com.songspasssta.reportservice.domain.type.ReportType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

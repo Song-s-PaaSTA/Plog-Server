@@ -20,6 +20,9 @@ import static lombok.AccessLevel.PROTECTED;
 @SQLRestriction("status = 'ACTIVE'")
 public class Bookmark extends BaseEntity {
 
+    public static final String STATUS_DELETED = "DELETED";
+    public static final String STATUS_ACTIVE = "ACTIVE";
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
@@ -40,7 +43,7 @@ public class Bookmark extends BaseEntity {
         this.bookmarked = bookmarked;
     }
 
-    public void setBookmarked(Boolean bookmarked) {
+    public void toggleBookmarkStatus(Boolean bookmarked) {
         this.bookmarked = bookmarked;
     }
 }

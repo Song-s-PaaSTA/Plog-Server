@@ -1,10 +1,8 @@
 package com.songspasssta.reportservice.dto.request;
 
-import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.type.RegionType;
 import com.songspasssta.reportservice.domain.type.ReportType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,37 +27,10 @@ public class ReportSaveRequestDto {
     private ReportType reportType;
     private RegionType regionType;
 
-    // 이미지 URL을 설정하기 위한 setter 추가
-    public void setReportImgUrl(String reportImgUrl) {
-        this.reportImgUrl = reportImgUrl;
-    }
-
-    public void setRegionType(RegionType regionType) {
-        this.regionType = regionType;
-    }
-    // ReportType을 설정하기 위한 setter 추가
-    public void setReportType(ReportType reportType) {
-        this.reportType = reportType;
-    }
-
-    // 도로명 주소에서 "서울" 등의 시/도 부분을 추출
+    /**
+     * 도로명 주소에서 "서울" 등의 시/도 부분을 추출
+     */
     public String extractRegionFromAddr() {
-        if (roadAddr != null && !roadAddr.isEmpty()) {
-            return roadAddr.split(" ")[0];
-        }
-        return null;
-    }
-
-
-    // Report 엔티티로 변환하는 메서드
-    public Report toEntity(Long memberId) {
-        return Report.builder()
-                .memberId(memberId)
-                .roadAddr(roadAddr)
-                .reportDesc(reportDesc)
-                .reportImgUrl(reportImgUrl)
-                .regionType(regionType)
-                .reportType(reportType)
-                .build();
+        return (roadAddr != null && !roadAddr.isEmpty()) ? roadAddr.split(" ")[0] : null;
     }
 }
