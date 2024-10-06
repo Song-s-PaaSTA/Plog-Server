@@ -10,13 +10,13 @@ import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional
@@ -49,8 +49,8 @@ public class PloggingService {
         ploggingRepository.save(plogging);
     }
 
-    public PloggingListResponse getAllPloggingByMemberId(final Long memberId, final Pageable pageable) {
-        final Slice<Plogging> plogging = ploggingRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable);
+    public PloggingListResponse getAllPloggingByMemberId(final Long memberId) {
+        final List<Plogging> plogging = ploggingRepository.findByMemberIdOrderByCreatedAtDesc(memberId);
         return PloggingListResponse.of(plogging);
     }
 
@@ -67,7 +67,7 @@ public class PloggingService {
                 ploggingRouteRequest.getEndName()
         );
 
-        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey,tMapRouteRequest);
+        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
         return PloggingRouteResponse;
     }
 }

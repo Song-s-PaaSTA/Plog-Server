@@ -7,8 +7,6 @@ import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import com.songspasssta.ploggingservice.service.PloggingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
-import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,10 +29,8 @@ public class PloggingController {
     }
 
     @GetMapping
-    public ResponseEntity<PloggingListResponse> getMemberPlogging(
-            @PageableDefault(sort = "createdAt", direction = DESC, size = 20) final Pageable pageable,
-            @RequestParam("memberId") final Long memberId) {
-        final PloggingListResponse ploggingListResponse = ploggingService.getAllPloggingByMemberId(memberId, pageable);
+    public ResponseEntity<PloggingListResponse> getMemberPlogging(@RequestParam("memberId") final Long memberId) {
+        final PloggingListResponse ploggingListResponse = ploggingService.getAllPloggingByMemberId(memberId);
         return ResponseEntity.ok().body(ploggingListResponse);
     }
 
