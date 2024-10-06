@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/webjars/**", "/member/v1/api-docs", "/api/v1/login/**", "/api/v1/renew", "/api/v1/**", "/api/v1/reward").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/api/**").permitAll()
+                        .anyRequest().permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .defaultAuthenticationEntryPointFor(
