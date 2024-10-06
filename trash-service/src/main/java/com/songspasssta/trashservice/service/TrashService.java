@@ -17,11 +17,10 @@ public class TrashService {
 
     /**
      * 모든 쓰레기 장소 조회
-     * @return List<TrashResponseDto>
      */
-    public List<TrashResponseDto> getAllTrash() {
+    public List<TrashResponseDto.TrashDto> getAllTrash() { // 반환 타입 수정
         return trashRepository.findAll().stream()
-                .map(trash -> new TrashResponseDto(
+                .map(trash -> new TrashResponseDto.TrashDto( // TrashDto 객체 생성
                         trash.getId(),
                         trash.getLatitude(),
                         trash.getLongitude(),

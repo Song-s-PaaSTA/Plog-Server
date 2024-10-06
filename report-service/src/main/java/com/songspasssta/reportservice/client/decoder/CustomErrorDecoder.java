@@ -4,7 +4,7 @@ import com.songspasssta.common.exception.BadRequestException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
 
-import static com.songspasssta.common.exception.ExceptionCode.INTERNAL_SEVER_ERROR;
+import static com.songspasssta.common.exception.ExceptionCode.INTERNAL_SERVER_ERROR;
 import static com.songspasssta.common.exception.ExceptionCode.INVALID_REQUEST;
 
 public class CustomErrorDecoder implements ErrorDecoder {
@@ -14,6 +14,6 @@ public class CustomErrorDecoder implements ErrorDecoder {
         if (response.status() == 400) {
             return new BadRequestException(INVALID_REQUEST);
         }
-        return new BadRequestException(INTERNAL_SEVER_ERROR);
+        return new BadRequestException(INTERNAL_SERVER_ERROR);
     }
 }
