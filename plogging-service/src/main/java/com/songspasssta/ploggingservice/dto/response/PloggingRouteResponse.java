@@ -40,6 +40,5 @@ public class PloggingRouteResponse {
         private int index;
         private String name;
         private String description;
-        private String nextRoadName;
     }
 }

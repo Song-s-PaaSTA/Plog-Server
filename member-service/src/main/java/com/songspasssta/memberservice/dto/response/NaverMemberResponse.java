@@ -23,6 +23,6 @@ public class NaverMemberResponse {
     @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class NaverMemberDetail {
         private String id;
-        private String nickname;
+        private String email;
     }
 }
