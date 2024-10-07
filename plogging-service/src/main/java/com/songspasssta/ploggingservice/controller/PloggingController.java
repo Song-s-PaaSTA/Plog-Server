@@ -2,6 +2,7 @@ package com.songspasssta.ploggingservice.controller;
 
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
+import com.songspasssta.ploggingservice.dto.response.CoordinatesResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import com.songspasssta.ploggingservice.service.PloggingService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
@@ -23,9 +25,9 @@ public class PloggingController {
     private final PloggingService ploggingService;
 
     @GetMapping("/route")
-    public ResponseEntity<PloggingRouteResponse> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
-        final PloggingRouteResponse PloggingRouteResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
-        return ResponseEntity.ok().body(PloggingRouteResponse);
+    public ResponseEntity<CoordinatesResponse> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
+        final CoordinatesResponse coordinatesResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
+        return ResponseEntity.ok().body(coordinatesResponse);
     }
 
     @GetMapping
