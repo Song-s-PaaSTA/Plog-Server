@@ -13,6 +13,7 @@ public class LoginResponse {
     private final String email;
     private final String socialLoginId;
     private final SocialLoginType socialLoginType;
+    private final String profileImageUrl;
     private final String accessToken;
     private final String refreshToken;
     private final Boolean isNewMember;
@@ -28,6 +29,7 @@ public class LoginResponse {
                 member.getEmail(),
                 member.getSocialLoginId(),
                 member.getSocialLoginType(),
+                member.getProfileImageUrl(),
                 accessToken,
                 refreshToken,
                 isNewMember

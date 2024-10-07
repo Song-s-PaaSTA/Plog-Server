@@ -2,6 +2,7 @@ package com.songspasssta.ploggingservice.dto.response;
 
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,14 +11,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PloggingRouteResponse {
 
-    private String type;
     private List<Feature> features;
 
     @Data
     public static class Feature {
-        private String type;
         private Geometry geometry;
-        private Property properties;
     }
 
     @Data
@@ -35,10 +33,14 @@ public class PloggingRouteResponse {
         }
     }
 
-    @Data
-    public static class Property {
-        private int index;
-        private String name;
-        private String description;
+    public List<List<Double>> getAllCoordinates() {
+        List<List<Double>> allCoordinates = new ArrayList<>();
+        for (Feature feature : features) {
+            List<List<Double>> coords = feature.geometry.getCoordinates();
+            if (coords != null) {
+                allCoordinates.addAll(coords);
+            }
+        }
+        return allCoordinates;
     }
 }

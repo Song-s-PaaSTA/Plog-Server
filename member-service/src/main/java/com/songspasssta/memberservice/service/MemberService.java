@@ -145,8 +145,11 @@ public class MemberService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
+        final String refreshToken = tokenExtractor.getRefreshToken();
+
         reportClientService.deleteAllByMemberId(member.getId());
         ploggingClientService.deleteAllByMemberId(member.getId());
+        refreshTokenRepository.deleteById(refreshToken);
         memberRepository.deleteById(memberId);
     }
 

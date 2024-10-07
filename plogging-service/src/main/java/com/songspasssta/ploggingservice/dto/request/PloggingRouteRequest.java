@@ -1,7 +1,8 @@
 package com.songspasssta.ploggingservice.dto.request;
 
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,22 +13,28 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PloggingRouteRequest {
 
-    @NotNull(message = "출발지 경도를 입력해주세요.")
+    @Min(value = -180, message = "출발지 경도는 -180 이상이어야 합니다.")
+    @Max(value = 180, message = "출발지 경도는 180 이하여야 합니다.")
     private double startX;
 
-    @NotNull(message = "출발지 위도를 입력해주세요.")
+    @Min(value = -90, message = "출발지 위도는 -90 이상이어야 합니다.")
+    @Max(value = 90, message = "출발지 위도는 90 이하여야 합니다.")
     private double startY;
 
-    @NotNull(message = "도착지 경도를 입력해주세요.")
+    @Min(value = -180, message = "도착지 경도는 -180 이상이어야 합니다.")
+    @Max(value = 180, message = "도착지 경도는 180 이하여야 합니다.")
     private double endX;
 
-    @NotNull(message = "도착지 위도를 입력해주세요.")
+    @Min(value = -90, message = "도착지 위도는 -90 이상이어야 합니다.")
+    @Max(value = 90, message = "도착지 위도는 90 이하여야 합니다.")
     private double endY;
 
-    @NotNull(message = "경유지 경도를 입력해주세요.")
+    @Min(value = -180, message = "경유지 경도는 -180 이상이어야 합니다.")
+    @Max(value = 180, message = "경유지 경도는 180 이하여야 합니다.")
     private double passX;
 
-    @NotNull(message = "경유지 위도를 입력해주세요.")
+    @Min(value = -90, message = "경유지 위도는 -90 이상이어야 합니다.")
+    @Max(value = 90, message = "경유지 위도는 90 이하여야 합니다.")
     private double passY;
 
     @NotBlank(message = "요청 좌표 타입을 입력해주세요. ('EPSG3857')")
