@@ -53,7 +53,7 @@ public class Report extends BaseEntity {
     @Enumerated(value = STRING)
     private RegionType regionType;
 
-    @OneToMany(mappedBy = "report", orphanRemoval = true)
+    @OneToMany(mappedBy = "report", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     /**
