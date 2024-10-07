@@ -62,8 +62,8 @@ public class ReportApiController {
      * 내 신고글 목록 조회
      */
     @GetMapping("/mine")
-    public ResponseEntity<List<MyReportListResponseDto>> findMyReports(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
-        List<MyReportListResponseDto> response = reportService.findMyReports(memberId);
+    public ResponseEntity<MyReportListResponseDto> findMyReports(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        MyReportListResponseDto response = reportService.findMyReports(memberId);
         return ResponseEntity.ok(response);
     }
 

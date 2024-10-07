@@ -7,17 +7,15 @@ public class ApiClientException extends RuntimeException {
     private final ExceptionCode exceptionCode;
 
     public ApiClientException(ExceptionCode exceptionCode) {
-        super(exceptionCode.getMessage());  // ExceptionCode에서 제공하는 기본 메시지 사용
+        super(exceptionCode.getMessage());
         this.exceptionCode = exceptionCode;
     }
 
-    public ApiClientException(ExceptionCode exceptionCode, String message) {
-        super(message);
-        this.exceptionCode = exceptionCode;
+    public int getCode() {
+        return exceptionCode.getCode(); // 예외 코드 반환
     }
 
-    public ApiClientException(ExceptionCode exceptionCode, String message, Throwable cause) {
-        super(message, cause);
-        this.exceptionCode = exceptionCode;
+    public String getMessage() {
+        return exceptionCode.getMessage(); // 예외 메시지 반환
     }
 }

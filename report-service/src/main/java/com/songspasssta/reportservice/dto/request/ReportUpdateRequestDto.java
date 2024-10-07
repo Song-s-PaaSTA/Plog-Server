@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReportUpdateRequestDto {
     @NotBlank(message = "기존 이미지 url은 필수입니다.")
-    private String existingImageUrl;
+    private String existingImgUrl;
 
     @NotBlank(message = "리포트 상태는 필수입니다.")
-    private String inputReportStatus;
+    private String reportStatus;
 
     @NotBlank(message = "신고 설명은 필수입니다.")
     private String reportDesc;

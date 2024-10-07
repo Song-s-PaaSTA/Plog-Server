@@ -51,7 +51,7 @@ public class ReportService {
         RegionType regionType = RegionType.fromRoadAddr(requestDto.extractRegionFromAddr());
 
         // 신고글 상태 설정
-        ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getInputReportStatus()))
+        ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
 
         // Report 엔티티 생성
@@ -115,13 +115,20 @@ public class ReportService {
     /**
      * 내가 작성한 신고글 조회
      */
-    public List<MyReportListResponseDto> findMyReports(Long memberId) {
-        List<Report> reports = reportRepository.findAllByMemberId(memberId);
-        log.info("내가 작성한 신고글 조회 완료. 조회된 신고글 수: {}", reports.size());
-        return reports.stream()
-                .map(MyReportListResponseDto::new)
-                .collect(Collectors.toList());
+    public MyReportListResponseDto findMyReports(Long memberId) {
+        List<MyReportListResponseDto.MyReport> reportList = reportRepository.findAllByMemberId(memberId).stream()
+                .map(report -> new MyReportListResponseDto.MyReport(
+                        report.getId(),
+                        report.getReportImgUrl(),
+                        report.getRoadAddr()
+                ))
+                .toList();
+
+        log.info("내가 작성한 신고글 조회 완료. 조회된 신고글 수: {}", reportList.size());
+
+        return new MyReportListResponseDto(reportList);
     }
+
 
     /**
      * 신고글 삭제
@@ -141,10 +148,10 @@ public class ReportService {
     public ReportResponseDto updateReport(Long reportId, Long memberId, ReportUpdateRequestDto requestDto, MultipartFile reportImgFile) {
         Report report = validateReportAccess(reportId, memberId);
 
-        fileService.deleteFile(requestDto.getExistingImageUrl());
+        fileService.deleteFile(requestDto.getExistingImgUrl());
         String newImageUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
 
-        ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getInputReportStatus()))
+        ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
         report.updateDetails(requestDto.getReportDesc(), reportType, newImageUrl);
         log.info("신고글 수정 완료. 신고글 ID: {}", reportId);

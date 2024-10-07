@@ -1,4 +1,4 @@
-package com.songspasssta.dto.response;
+package com.songspasssta.trashservice.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

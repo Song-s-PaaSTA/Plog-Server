@@ -1,6 +1,6 @@
 package com.songspasssta.trashservice.service;
 
-import com.songspasssta.dto.response.TrashResponseDto;
+import com.songspasssta.trashservice.dto.response.TrashResponseDto;
 import com.songspasssta.trashservice.domain.repository.TrashRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

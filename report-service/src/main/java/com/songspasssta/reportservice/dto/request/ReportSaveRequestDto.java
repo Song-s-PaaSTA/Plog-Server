@@ -22,7 +22,7 @@ public class ReportSaveRequestDto {
     private String roadAddr;
 
     @NotBlank(message = "리포트 상태는 필수입니다.")
-    private String inputReportStatus;
+    private String reportStatus;
 
     private ReportType reportType;
     private RegionType regionType;
