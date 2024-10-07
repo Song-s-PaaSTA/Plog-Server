@@ -4,16 +4,15 @@ import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
 import com.songspasssta.ploggingservice.dto.response.CoordinatesResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
-import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import com.songspasssta.ploggingservice.service.PloggingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
@@ -36,10 +35,10 @@ public class PloggingController {
         return ResponseEntity.ok().body(ploggingListResponse);
     }
 
-    @PostMapping("/proof")
+    @PostMapping(value = "/proof", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Void> savePlogging(
             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
-            @RequestPart(value = "request") @Valid final PloggingRequest ploggingRequest,
+            @Valid @RequestPart(value = "request") final PloggingRequest ploggingRequest,
             @RequestPart(value = "file", required = false) final MultipartFile ploggingImage
     ) throws IOException {
         ploggingService.savePlogging(memberId, ploggingRequest, ploggingImage);
