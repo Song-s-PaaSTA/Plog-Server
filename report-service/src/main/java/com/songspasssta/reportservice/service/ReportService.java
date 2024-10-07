@@ -79,18 +79,32 @@ public class ReportService {
     /**
      * 신고글 리스트
      */
-    public List<ReportListResponseDto> findAllReports(Long memberId, List<String> regions, String sort, List<String> statuses) {
+    public ReportListResponseDto findAllReports(Long memberId, List<String> regions, String sort, List<String> statuses) {
+        // 지역 찾기
         List<RegionType> regionTypes = Optional.ofNullable(regions).orElse(List.of()).stream()
                 .map(RegionType::fromKoreanName).toList();
 
+        // 신고글 상태 찾기
         List<ReportType> reportTypes = Optional.ofNullable(statuses).orElse(List.of()).stream()
                 .map(ReportType::fromKoreanDescription).toList();
 
+        // 특정 조건에 맞는 신고글 정렬하기
         Specification<Report> specification = reportQueryService.buildReportSpecification(regionTypes, reportTypes, sort);
         List<Report> reports = reportRepository.findAll(specification);
 
         log.info("신고글 리스트 조회 완료. 조회된 신고글 수: {}", reports.size());
-        return reportQueryService.convertToResponseDto(reports, memberId, bookmarkRepository);
+        List<ReportListResponseDto.ReportDto> reportDtos = reports.stream()
+                .map(report -> new ReportListResponseDto.ReportDto(
+                        report.getId(),
+                        report.getReportImgUrl(),
+                        report.getReportType(),
+                        report.getRoadAddr(),
+                        report.getBookmarks().size(),
+                        bookmarkRepository.existsByReportIdAndMemberId(report.getId(), memberId)
+                ))
+                .toList();
+
+        return new ReportListResponseDto(reportDtos);
     }
 
     /**

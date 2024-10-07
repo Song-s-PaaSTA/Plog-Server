@@ -19,16 +19,18 @@ public class TrashService {
      * 모든 쓰레기 장소 조회
      */
     public ResponseEntity<TrashResponseDto> getAllTrash() {
-        List<TrashResponseDto.TrashDto> trashList = trashRepository.findAll().stream()
-                .map(trash -> new TrashResponseDto.TrashDto(
-                        trash.getId(),
-                        trash.getLatitude(),
-                        trash.getLongitude(),
-                        trash.getRoadAddr(),
-                        trash.getPlaceInfo()
-                ))
-                .toList();
-        TrashResponseDto response = new TrashResponseDto(trashList);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(
+                new TrashResponseDto(
+                        trashRepository.findAll().stream()
+                                .map(trash -> new TrashResponseDto.TrashDto(
+                                        trash.getId(),
+                                        trash.getLatitude(),
+                                        trash.getLongitude(),
+                                        trash.getRoadAddr(),
+                                        trash.getPlaceInfo()
+                                ))
+                                .toList()
+                )
+        );
     }
 }

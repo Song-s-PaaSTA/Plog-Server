@@ -39,12 +39,12 @@ public class ReportApiController {
      * 모든 신고글 조회
      */
     @GetMapping
-    public ResponseEntity<List<ReportListResponseDto>> findAllReports(
+    public ResponseEntity<ReportListResponseDto> findAllReports(
             @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
             @RequestParam(value = "region", required = false) List<String> regions,
             @RequestParam(value = "sort", required = false) String sort,
             @RequestParam(value = "status", required = false) List<String> statuses) {
-        List<ReportListResponseDto> response = reportService.findAllReports(memberId, regions, sort, statuses);
+        ReportListResponseDto response = reportService.findAllReports(memberId, regions, sort, statuses);
         return ResponseEntity.ok(response);
     }
 

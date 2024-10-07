@@ -78,14 +78,4 @@ public class ReportQueryService {
             }
         };
     }
-
-    /**
-     * ReportListResponseDto로 변환
-     */
-    public List<ReportListResponseDto> convertToResponseDto(List<Report> reports, Long memberId, BookmarkRepository bookmarkRepository) {
-        log.info("memberId: {}에 대해 {}개의 신고글을 ReportListResponseDto로 변환 중", memberId, reports.size());
-        return reports.stream()
-                .map(report -> new ReportListResponseDto(report, bookmarkRepository.existsByReportIdAndMemberId(report.getId(), memberId)))
-                .collect(Collectors.toList());
-    }
 }

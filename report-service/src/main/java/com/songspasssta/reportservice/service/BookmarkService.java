@@ -6,14 +6,13 @@ import com.songspasssta.reportservice.domain.Bookmark;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
-import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
+import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 북마크 조회, 토글 서비스
@@ -29,13 +28,29 @@ public class BookmarkService {
     /**
      * 특정 사용자가 북마크한 신고글 목록 조회
      */
-    public List<ReportListResponseDto> findMyBookmarks(Long memberId) {
-        List<ReportListResponseDto> bookmarks = bookmarkRepository.findAllByMemberIdAndBookmarked(memberId).stream()
-                .map(bookmark -> new ReportListResponseDto(bookmark.getReport(), true))
-                .collect(Collectors.toList());
+    public BookmarkedReportsResponseDto findMyBookmarks(Long memberId) {
+        List<BookmarkedReportsResponseDto.BookmarkSummaryDto> bookmarks = bookmarkRepository
+                .findAllByMemberIdAndBookmarked(memberId)
+                .stream()
+                .map(this::convertToBookmarkSummaryDto)
+                .toList();
+
         log.debug("북마크 조회 - MemberId: {}, 북마크 개수: {}", memberId, bookmarks.size());
-        return bookmarks;
+
+        return new BookmarkedReportsResponseDto(bookmarks);
     }
+
+    private BookmarkedReportsResponseDto.BookmarkSummaryDto convertToBookmarkSummaryDto(Bookmark bookmark) {
+        return new BookmarkedReportsResponseDto.BookmarkSummaryDto(
+                bookmark.getReport().getId(),
+                bookmark.getReport().getReportImgUrl(),
+                new BookmarkedReportsResponseDto.BookmarkSummaryDto.ReportStatusDto(bookmark.getReport().getReportType().name()),
+                bookmark.getReport().getRoadAddr(),
+                bookmark.getReport().getBookmarks().size(),
+                true
+        );
+    }
+
 
     /**
      * 북마크 토글 (북마크가 없으면 생성, 있으면 해제)
@@ -48,10 +63,9 @@ public class BookmarkService {
                             "ID가 " + reportId + "인 신고글을 찾을 수 없습니다.");
                 });
 
-        // 회원 ID와 신고글 ID로 기존 북마크 여부 조회 후 없으면 생성, 있으면 토글
         return bookmarkRepository.findByReportIdAndMemberId(reportId, memberId)
-                .map(bookmark -> toggleExistingBookmark(bookmark, reportId)) // 북마크가 있으면 토글
-                .orElseGet(() -> createNewBookmark(memberId, report, reportId)); // 북마크가 없으면 생성
+                .map(bookmark -> toggleExistingBookmark(bookmark, reportId))
+                .orElseGet(() -> createNewBookmark(memberId, report, reportId));
     }
 
     /**

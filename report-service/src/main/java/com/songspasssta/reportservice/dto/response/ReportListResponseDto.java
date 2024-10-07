@@ -4,25 +4,22 @@ import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.type.ReportType;
 import lombok.Getter;
 
+import java.util.List;
+
 /**
  * 신고글 저장 응답 DTO
  */
-@Getter
-public class ReportListResponseDto {
+public record ReportListResponseDto(List<ReportDto> reports) {
 
-    private final Long id;
-    private final String reportImgUrl;
-    private final ReportType reportStatus;
-    private final String roadAddr;
-    private final int bookmarkCount; // 북마크 개수
-    private final boolean bookmarkedByUser; // 내가 북마크했는지 여부
-
-    public ReportListResponseDto(Report entity, boolean bookmarkedByUser) {
-        this.id = entity.getId();
-        this.reportImgUrl = entity.getReportImgUrl();
-        this.reportStatus = entity.getReportType();
-        this.roadAddr = entity.getRoadAddr();
-        this.bookmarkCount = entity.getBookmarks().size();
-        this.bookmarkedByUser = bookmarkedByUser;
+    public record ReportDto(Long id, String reportImgUrl, ReportType reportStatus, String roadAddr,
+                            int bookmarkCount, boolean bookmarkedByUser) {
+        public ReportDto(Report entity, boolean bookmarkedByUser) {
+            this(entity.getId(),
+                    entity.getReportImgUrl(),
+                    entity.getReportType(),
+                    entity.getRoadAddr(),
+                    entity.getBookmarks().size(),
+                    bookmarkedByUser);
+        }
     }
 }
