@@ -6,6 +6,7 @@ import com.songspasssta.ploggingservice.domain.repository.PloggingRepository;
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
 import com.songspasssta.ploggingservice.dto.request.TMapRouteRequest;
+import com.songspasssta.ploggingservice.dto.response.CoordinatesResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import lombok.RequiredArgsConstructor;
@@ -54,7 +55,7 @@ public class PloggingService {
         return PloggingListResponse.of(plogging);
     }
 
-    public PloggingRouteResponse getPloggingRoute(final PloggingRouteRequest ploggingRouteRequest) {
+    public CoordinatesResponse getPloggingRoute(final PloggingRouteRequest ploggingRouteRequest) {
         final TMapRouteRequest tMapRouteRequest = new TMapRouteRequest(
                 ploggingRouteRequest.getStartX(),
                 ploggingRouteRequest.getStartY(),
@@ -67,7 +68,8 @@ public class PloggingService {
                 ploggingRouteRequest.getEndName()
         );
 
-        final PloggingRouteResponse PloggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
-        return PloggingRouteResponse;
+        final PloggingRouteResponse ploggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
+        final CoordinatesResponse coordinates = new CoordinatesResponse(ploggingRouteResponse.getAllCoordinates());
+        return coordinates;
     }
 }
