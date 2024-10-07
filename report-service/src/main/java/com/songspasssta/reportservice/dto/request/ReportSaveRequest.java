@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReportSaveRequest {
 
-    private String reportImgUrl;
-
     @NotBlank(message = "신고 설명은 필수입니다.")
     private String reportDesc;
 
@@ -24,12 +22,7 @@ public class ReportSaveRequest {
     @NotBlank(message = "리포트 상태는 필수입니다.")
     private String reportStatus;
 
-    private ReportType reportType;
-    private RegionType regionType;
-
-    /**
-     * 도로명 주소에서 "서울" 등의 시/도 부분을 추출
-     */
+    // 전체 도로명 주소에서 "서울" 등의 시/도 부분을 추출
     public String extractRegionFromAddr() {
         return (roadAddr != null && !roadAddr.isEmpty()) ? roadAddr.split(" ")[0] : null;
     }

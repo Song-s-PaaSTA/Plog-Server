@@ -28,11 +28,11 @@ public class ReportApiController {
      * 신고글 저장
      */
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ReportResponse> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
-                                               @RequestPart("requestDto") @Valid ReportSaveRequest requestDto,
-                                               @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
-        ReportResponse response = reportService.save(memberId, requestDto, reportImgFile);
-        return ResponseEntity.status(201).body(response);
+    public ResponseEntity<Void> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
+                                     @RequestPart("requestDto") @Valid ReportSaveRequest requestDto,
+                                     @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+        reportService.save(memberId, requestDto, reportImgFile);
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -81,12 +81,12 @@ public class ReportApiController {
      * 신고글 수정
      */
     @PatchMapping("/{reportId}")
-    public ResponseEntity<ReportResponse> updateReport(@PathVariable Long reportId,
+    public ResponseEntity<Void> updateReport(@PathVariable Long reportId,
                                                        @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
                                                        @RequestPart("requestDto") @Valid ReportUpdateRequest requestDto,
                                                        @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
-        ReportResponse response = reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
-        return ResponseEntity.ok(response);
+        reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
+        return ResponseEntity.noContent().build();
     }
 
     /**

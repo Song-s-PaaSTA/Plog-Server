@@ -1,14 +1,16 @@
 package com.songspasssta.reportservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
- * 특정 사용자의 신고글 내역 응답 DTO
+ * 내 신고글 조회 응답 DTO
  */
 
-public record MyReportListResponse(List<MyReport> myReports) {
+public record MyReportListResponse(@JsonProperty("myReports") List<MyReportList> myReports) {
 
-    public record MyReport(Long id, String reportImgUrl, String roadAddr) {
+    public record MyReportList(Long reportId, String reportImgUrl, String roadAddr) {
     }
 }
 

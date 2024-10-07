@@ -1,16 +1,14 @@
 package com.songspasssta.reportservice.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
- * 신고글 저장 응답 DTO
+ * 북마크한 신고글 응답 DTO
  */
-public record BookmarkedReportsResponse(List<BookmarkSummaryDto> bookmarked) {
+public record BookmarkedReportsResponse(@JsonProperty("bookmarked") List<BookmarkReports> bookmarked) {
 
-    public record BookmarkSummaryDto(Long id, String reportImgUrl, ReportStatusDto reportStatus, String roadAddr,
-                                     int bookmarkCount, boolean bookmarkedByUser) {
-
-        public record ReportStatusDto(String type) {
-        }
+    public record BookmarkReports(Long reportId, String reportImgUrl, String reportStatus, String roadAddr, int bookmarkCount) {
     }
 }

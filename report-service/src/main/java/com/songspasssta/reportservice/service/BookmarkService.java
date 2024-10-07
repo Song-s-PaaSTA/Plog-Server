@@ -29,10 +29,10 @@ public class BookmarkService {
      * 특정 사용자가 북마크한 신고글 목록 조회
      */
     public BookmarkedReportsResponse findMyBookmarks(Long memberId) {
-        List<BookmarkedReportsResponse.BookmarkSummaryDto> bookmarks = bookmarkRepository
+        List<BookmarkedReportsResponse.BookmarkReports> bookmarks = bookmarkRepository
                 .findAllByMemberIdAndBookmarked(memberId)
                 .stream()
-                .map(this::convertToBookmarkSummaryDto)
+                .map(this::convertToBookmarkReports)
                 .toList();
 
         log.debug("북마크 조회 - MemberId: {}, 북마크 개수: {}", memberId, bookmarks.size());
@@ -40,14 +40,13 @@ public class BookmarkService {
         return new BookmarkedReportsResponse(bookmarks);
     }
 
-    private BookmarkedReportsResponse.BookmarkSummaryDto convertToBookmarkSummaryDto(Bookmark bookmark) {
-        return new BookmarkedReportsResponse.BookmarkSummaryDto(
+    private BookmarkedReportsResponse.BookmarkReports convertToBookmarkReports(Bookmark bookmark) {
+        return new BookmarkedReportsResponse.BookmarkReports(
                 bookmark.getReport().getId(),
                 bookmark.getReport().getReportImgUrl(),
-                new BookmarkedReportsResponse.BookmarkSummaryDto.ReportStatusDto(bookmark.getReport().getReportType().name()),
+                bookmark.getReport().getReportType().getKoreanDescription(),
                 bookmark.getReport().getRoadAddr(),
-                bookmark.getReport().getBookmarks().size(),
-                true
+                bookmark.getReport().getBookmarks().size()
         );
     }
 

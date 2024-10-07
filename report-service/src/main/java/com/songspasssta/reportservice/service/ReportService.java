@@ -13,7 +13,6 @@ import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.MyReportListResponse;
 import com.songspasssta.reportservice.dto.response.ReportDetailResponse;
 import com.songspasssta.reportservice.dto.response.ReportListResponse;
-import com.songspasssta.reportservice.dto.response.ReportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
@@ -42,7 +41,7 @@ public class ReportService {
      * 신고글 저장
      */
     @Transactional(rollbackFor = Exception.class)
-    public ReportResponse save(Long memberId, ReportSaveRequest requestDto, MultipartFile reportImgFile) {
+    public void save(Long memberId, ReportSaveRequest requestDto, MultipartFile reportImgFile) {
         // 이미지 업로드 처리
         String imageUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
 
@@ -64,15 +63,12 @@ public class ReportService {
                 .build();
 
         // 신고글 저장
-        Report savedReport = reportRepository.save(report);
-        log.info("신고글 저장 완료. 신고글 ID: {}", savedReport.getId());
+        reportRepository.save(report);
+        log.info("신고글 저장 완료. 신고글 ID: {}", report.getId());
 
         // 리워드 점수 증가
         rewardService.increaseRewardScore(memberId);
         log.info("리워드 점수 증가. 회원 ID: {}", memberId);
-
-        // 응답 DTO 생성
-        return new ReportResponse(savedReport);
     }
 
     /**
@@ -92,11 +88,11 @@ public class ReportService {
         List<Report> reports = reportRepository.findAll(specification);
 
         log.info("신고글 리스트 조회 완료. 조회된 신고글 수: {}", reports.size());
-        List<ReportListResponse.ReportDto> reportDtos = reports.stream()
-                .map(report -> new ReportListResponse.ReportDto(
+        List<ReportListResponse.ReportList> reportDtos = reports.stream()
+                .map(report -> new ReportListResponse.ReportList(
                         report.getId(),
                         report.getReportImgUrl(),
-                        report.getReportType(),
+                        report.getReportType().getKoreanDescription(),
                         report.getRoadAddr(),
                         report.getBookmarks().size(),
                         bookmarkRepository.existsByReportIdAndMemberId(report.getId(), memberId)
@@ -114,8 +110,20 @@ public class ReportService {
                 .orElseThrow(() -> new EntityNotFoundException(ExceptionCode.REPORT_NOT_FOUND, "ID가 " + reportId + "인 신고글을 찾을 수 없습니다."));
 
         boolean isBookmarkedByUser = checkIfBookmarkedByMember(reportId, memberId);
+
+        ReportDetailResponse.ReportDetail reportDetail = new ReportDetailResponse.ReportDetail(
+                report.getId(),
+                report.getReportImgUrl(),
+                report.getReportDesc(),
+                report.getRoadAddr(),
+                report.getReportType().getKoreanDescription(),
+                report.getCreatedAt().toString().substring(2, 10).replace("-", "."),
+                report.getBookmarks().size(),
+                isBookmarkedByUser
+        );
+
         log.info("신고글 상세 조회 완료. 신고글 ID: {}, 회원 ID: {}", reportId, memberId);
-        return new ReportDetailResponse(report, isBookmarkedByUser);
+        return new ReportDetailResponse(reportDetail);
     }
 
     /**
@@ -129,8 +137,8 @@ public class ReportService {
      * 내가 작성한 신고글 조회
      */
     public MyReportListResponse findMyReports(Long memberId) {
-        List<MyReportListResponse.MyReport> reportList = reportRepository.findAllByMemberId(memberId).stream()
-                .map(report -> new MyReportListResponse.MyReport(
+        List<MyReportListResponse.MyReportList> reportList = reportRepository.findAllByMemberId(memberId).stream()
+                .map(report -> new MyReportListResponse.MyReportList(
                         report.getId(),
                         report.getReportImgUrl(),
                         report.getRoadAddr()
@@ -158,7 +166,7 @@ public class ReportService {
      * 신고글 수정
      */
     @Transactional(rollbackFor = Exception.class)
-    public ReportResponse updateReport(Long reportId, Long memberId, ReportUpdateRequest requestDto, MultipartFile reportImgFile) {
+    public void updateReport(Long reportId, Long memberId, ReportUpdateRequest requestDto, MultipartFile reportImgFile) {
         Report report = validateReportAccess(reportId, memberId);
 
         fileService.deleteFile(requestDto.getExistingImgUrl());
@@ -168,7 +176,6 @@ public class ReportService {
                 .orElse(ReportType.NOT_STARTED);
         report.updateDetails(requestDto.getReportDesc(), reportType, newImageUrl);
         log.info("신고글 수정 완료. 신고글 ID: {}", reportId);
-        return new ReportResponse(report);
     }
 
     /**
