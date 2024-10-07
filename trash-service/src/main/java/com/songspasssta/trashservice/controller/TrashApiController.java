@@ -1,7 +1,7 @@
 package com.songspasssta.trashservice.controller;
 
 
-import com.songspasssta.trashservice.dto.response.TrashResponseDto;
+import com.songspasssta.trashservice.dto.response.TrashResponse;
 import com.songspasssta.trashservice.service.TrashService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class TrashApiController {
      * 쓰레기 장소 조회
      */
     @GetMapping
-    public ResponseEntity<TrashResponseDto> getAllTrash() {
+    public ResponseEntity<TrashResponse> getAllTrash() {
         return trashService.getAllTrash();
     }
 }

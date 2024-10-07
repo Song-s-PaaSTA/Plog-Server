@@ -6,7 +6,7 @@ import com.songspasssta.reportservice.domain.Bookmark;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
-import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponseDto;
+import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,8 @@ public class BookmarkService {
     /**
      * 특정 사용자가 북마크한 신고글 목록 조회
      */
-    public BookmarkedReportsResponseDto findMyBookmarks(Long memberId) {
-        List<BookmarkedReportsResponseDto.BookmarkSummaryDto> bookmarks = bookmarkRepository
+    public BookmarkedReportsResponse findMyBookmarks(Long memberId) {
+        List<BookmarkedReportsResponse.BookmarkSummaryDto> bookmarks = bookmarkRepository
                 .findAllByMemberIdAndBookmarked(memberId)
                 .stream()
                 .map(this::convertToBookmarkSummaryDto)
@@ -37,14 +37,14 @@ public class BookmarkService {
 
         log.debug("북마크 조회 - MemberId: {}, 북마크 개수: {}", memberId, bookmarks.size());
 
-        return new BookmarkedReportsResponseDto(bookmarks);
+        return new BookmarkedReportsResponse(bookmarks);
     }
 
-    private BookmarkedReportsResponseDto.BookmarkSummaryDto convertToBookmarkSummaryDto(Bookmark bookmark) {
-        return new BookmarkedReportsResponseDto.BookmarkSummaryDto(
+    private BookmarkedReportsResponse.BookmarkSummaryDto convertToBookmarkSummaryDto(Bookmark bookmark) {
+        return new BookmarkedReportsResponse.BookmarkSummaryDto(
                 bookmark.getReport().getId(),
                 bookmark.getReport().getReportImgUrl(),
-                new BookmarkedReportsResponseDto.BookmarkSummaryDto.ReportStatusDto(bookmark.getReport().getReportType().name()),
+                new BookmarkedReportsResponse.BookmarkSummaryDto.ReportStatusDto(bookmark.getReport().getReportType().name()),
                 bookmark.getReport().getRoadAddr(),
                 bookmark.getReport().getBookmarks().size(),
                 true

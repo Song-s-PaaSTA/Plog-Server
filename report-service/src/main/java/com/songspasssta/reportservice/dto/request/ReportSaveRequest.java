@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  */
 @Getter
 @NoArgsConstructor
-public class ReportSaveRequestDto {
+public class ReportSaveRequest {
 
     private String reportImgUrl;
 

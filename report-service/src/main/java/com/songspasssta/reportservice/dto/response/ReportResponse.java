@@ -2,7 +2,6 @@ package com.songspasssta.reportservice.dto.response;
 
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.type.ReportType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -11,7 +10,7 @@ import lombok.RequiredArgsConstructor;
  */
 @Getter
 @RequiredArgsConstructor
-public class ReportResponseDto {
+public class ReportResponse {
     private final Long id;
     private final Long memberId;
     private final String reportImgUrl;
@@ -19,7 +18,7 @@ public class ReportResponseDto {
     private final ReportType reportStatus;
     private final String roadAddr;
 
-    public ReportResponseDto(Report report) {
+    public ReportResponse(Report report) {
         this.id = report.getId();
         this.memberId = report.getMemberId();
         this.reportImgUrl = report.getReportImgUrl();

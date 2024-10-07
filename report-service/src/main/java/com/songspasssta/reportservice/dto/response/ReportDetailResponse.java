@@ -4,9 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.songspasssta.reportservice.domain.Report;
 import com.songspasssta.reportservice.domain.type.ReportType;
 
-public record ReportDetailResponseDto(@JsonProperty("reportDetail") ReportDetail reportDetail) {
+public record ReportDetailResponse(@JsonProperty("reportDetail") ReportDetail reportDetail) {
 
-    public ReportDetailResponseDto(Report report, boolean bookmarkedByUser) {
+    public ReportDetailResponse(Report report, boolean bookmarkedByUser) {
         this(new ReportDetail(
                 report.getId(),
                 report.getReportImgUrl(),

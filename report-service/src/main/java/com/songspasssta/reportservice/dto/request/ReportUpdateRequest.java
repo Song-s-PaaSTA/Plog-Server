@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReportUpdateRequestDto {
+public class ReportUpdateRequest {
     @NotBlank(message = "기존 이미지 url은 필수입니다.")
     private String existingImgUrl;
 

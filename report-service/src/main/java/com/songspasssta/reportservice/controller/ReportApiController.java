@@ -1,7 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
-import com.songspasssta.reportservice.dto.request.ReportSaveRequestDto;
-import com.songspasssta.reportservice.dto.request.ReportUpdateRequestDto;
+import com.songspasssta.reportservice.dto.request.ReportSaveRequest;
+import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.*;
 import com.songspasssta.reportservice.service.ReportService;
 import jakarta.validation.Valid;
@@ -28,10 +28,10 @@ public class ReportApiController {
      * 신고글 저장
      */
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<ReportResponseDto> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
-                                                  @RequestPart("requestDto") @Valid ReportSaveRequestDto requestDto,
-                                                  @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
-        ReportResponseDto response = reportService.save(memberId, requestDto, reportImgFile);
+    public ResponseEntity<ReportResponse> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
+                                               @RequestPart("requestDto") @Valid ReportSaveRequest requestDto,
+                                               @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+        ReportResponse response = reportService.save(memberId, requestDto, reportImgFile);
         return ResponseEntity.status(201).body(response);
     }
 
@@ -39,12 +39,12 @@ public class ReportApiController {
      * 모든 신고글 조회
      */
     @GetMapping
-    public ResponseEntity<ReportListResponseDto> findAllReports(
+    public ResponseEntity<ReportListResponse> findAllReports(
             @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
             @RequestParam(value = "region", required = false) List<String> regions,
             @RequestParam(value = "sort", required = false) String sort,
             @RequestParam(value = "status", required = false) List<String> statuses) {
-        ReportListResponseDto response = reportService.findAllReports(memberId, regions, sort, statuses);
+        ReportListResponse response = reportService.findAllReports(memberId, regions, sort, statuses);
         return ResponseEntity.ok(response);
     }
 
@@ -52,9 +52,9 @@ public class ReportApiController {
      * 신고글 상세 조회
      */
     @GetMapping("/{reportId}")
-    public ResponseEntity<ReportDetailResponseDto> findReportById(@PathVariable Long reportId,
-                                                                  @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
-        ReportDetailResponseDto response = reportService.findReportById(reportId, memberId);
+    public ResponseEntity<ReportDetailResponse> findReportById(@PathVariable Long reportId,
+                                                               @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        ReportDetailResponse response = reportService.findReportById(reportId, memberId);
         return ResponseEntity.ok(response);
     }
 
@@ -62,8 +62,8 @@ public class ReportApiController {
      * 내 신고글 목록 조회
      */
     @GetMapping("/mine")
-    public ResponseEntity<MyReportListResponseDto> findMyReports(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
-        MyReportListResponseDto response = reportService.findMyReports(memberId);
+    public ResponseEntity<MyReportListResponse> findMyReports(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        MyReportListResponse response = reportService.findMyReports(memberId);
         return ResponseEntity.ok(response);
     }
 
@@ -81,11 +81,11 @@ public class ReportApiController {
      * 신고글 수정
      */
     @PatchMapping("/{reportId}")
-    public ResponseEntity<ReportResponseDto> updateReport(@PathVariable Long reportId,
-                                                          @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
-                                                          @RequestPart("requestDto") @Valid ReportUpdateRequestDto requestDto,
-                                                          @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
-        ReportResponseDto response = reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
+    public ResponseEntity<ReportResponse> updateReport(@PathVariable Long reportId,
+                                                       @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
+                                                       @RequestPart("requestDto") @Valid ReportUpdateRequest requestDto,
+                                                       @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
+        ReportResponse response = reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
         return ResponseEntity.ok(response);
     }
 

@@ -1,13 +1,10 @@
 package com.songspasssta.reportservice.controller;
 
-import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponseDto;
-import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
+import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponse;
 import com.songspasssta.reportservice.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
@@ -21,8 +18,8 @@ public class BookmarkApiController {
      * 북마크한 신고글 조회
      */
     @GetMapping("/bookmarks/mine")
-    public ResponseEntity<BookmarkedReportsResponseDto> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
-        BookmarkedReportsResponseDto response = bookmarkService.findMyBookmarks(memberId);
+    public ResponseEntity<BookmarkedReportsResponse> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        BookmarkedReportsResponse response = bookmarkService.findMyBookmarks(memberId);
         return ResponseEntity.ok(response);
     }
 
