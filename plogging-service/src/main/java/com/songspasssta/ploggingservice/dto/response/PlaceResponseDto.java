@@ -3,11 +3,19 @@ package com.songspasssta.ploggingservice.dto.response;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public class PlaceResponseDto {
-    private String placName;   // 장소명
-    private String roadAddress; // 도로명 주소
-    private double latitude;    // 위도
-    private double longitude;   // 경도
+    @AllArgsConstructor
+    @Getter
+    public static class PlaceDto {
+        private Float latitude;
+        private Float longitude;
+        private String roadAddr;
+        private String placeInfo;
+    }
+
+    private List<PlaceDto> searchedPlace;
 }

@@ -23,8 +23,6 @@ public class TrashApiController {
      */
     @GetMapping
     public ResponseEntity<TrashResponseDto> getAllTrash() {
-        List<TrashResponseDto.TrashDto> trashList = trashService.getAllTrash();
-        TrashResponseDto response = new TrashResponseDto(trashList);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return trashService.getAllTrash();
     }
 }
