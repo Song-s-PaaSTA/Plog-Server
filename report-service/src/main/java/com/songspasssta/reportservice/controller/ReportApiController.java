@@ -1,6 +1,7 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.common.response.SuccessResponse;
+import com.songspasssta.reportservice.dto.request.ReportFilterRequest;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequest;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.MyReportListResponse;
@@ -41,13 +42,12 @@ public class ReportApiController {
     /**
      * 모든 신고글 조회
      */
-    @GetMapping
+    @PostMapping
     public ResponseEntity<SuccessResponse<ReportListResponse>> findAllReports(
             @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
-            @RequestParam(value = "region", required = false) List<String> regions,
-            @RequestParam(value = "sort", required = false) String sort,
-            @RequestParam(value = "status", required = false) List<String> statuses) {
-        ReportListResponse response = reportService.findAllReports(memberId, regions, sort, statuses);
+            @RequestBody ReportFilterRequest filterDto) {
+
+        ReportListResponse response = reportService.findAllReports(memberId, filterDto);
         return ResponseEntity.ok().body(SuccessResponse.of(response));
     }
 

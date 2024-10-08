@@ -2,6 +2,8 @@ package com.songspasssta.reportservice.domain.type;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum RegionType {
     // 수도권
@@ -37,22 +39,41 @@ public enum RegionType {
 
     // 한글 이름으로 RegionType 찾기
     public static RegionType fromKoreanName(String koreanName) {
+        if (koreanName == null || koreanName.isEmpty()) {
+            return null;
+        }
+        String normalizedKoreanName = koreanName.replaceAll("\\s+", "");
         for (RegionType region : RegionType.values()) {
-            if (region.koreanName.equals(koreanName)) {
+            String normalizedRegionName = region.koreanName.replaceAll("\\s+", "");
+            if (normalizedRegionName.equals(normalizedKoreanName)) {
                 return region;
             }
         }
         return null;
-//        throw new IllegalArgumentException("존재하지 않는 지역: " + koreanName);
     }
 
     // 짧은 이름으로 RegionType 찾기
     public static RegionType fromRoadAddr(String roadAddr) {
+        if (roadAddr == null || roadAddr.isEmpty()) {
+            return null;
+        }
+        String normalizedRoadAddr = roadAddr.replaceAll("\\s+", "");
         for (RegionType region : RegionType.values()) {
-            if (roadAddr.startsWith(region.shortName)) {
+            String normalizedShortName = region.shortName.replaceAll("\\s+", "");
+            if (normalizedRoadAddr.startsWith(normalizedShortName)) {
                 return region;
             }
         }
         return null;
+    }
+
+    // 유효한 지역인지 확인 (공백 제거 후 비교)
+    public static boolean isValidRegion(String region) {
+        if (region == null || region.isEmpty()) {
+            return false;
+        }
+        String normalizedRegion = region.replaceAll("\\s+", "");
+        return Arrays.stream(RegionType.values())
+                .anyMatch(r -> r.getKoreanName().replaceAll("\\s+", "").equals(normalizedRegion));
     }
 }

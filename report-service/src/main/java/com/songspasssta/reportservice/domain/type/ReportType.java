@@ -2,6 +2,8 @@ package com.songspasssta.reportservice.domain.type;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 public enum ReportType {
 
@@ -33,5 +35,17 @@ public enum ReportType {
             }
         }
         return null; // 한글 상태에 속하지 않으면 null 반환
+    }
+
+    public static boolean isValidStatus(String status) {
+        if (status == null || status.isEmpty()) {
+            return false;
+        }
+
+        // 입력값의 모든 공백을 제거하여 비교
+        String normalizedStatus = status.replaceAll("\\s+", "");
+
+        return Arrays.stream(ReportType.values())
+                .anyMatch(s -> s.getKoreanDescription().replaceAll("\\s+", "").equals(normalizedStatus));
     }
 }
