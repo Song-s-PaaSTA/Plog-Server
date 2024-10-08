@@ -82,29 +82,42 @@ public class ReportService {
     /**
      * 신고글 리스트
      */
-    public ReportListResponse findAllReports(Long memberId, ReportFilterRequest filterDto) {
-        // 지역 필터, 신고글 타입 필터, 정렬 유효성 검증
-        validateFilters(filterDto);
+    public ReportListResponse findAllReports(Long memberId, List<String> regions, String sort, List<String> statuses) {
 
         // 지역 찾기
-        List<RegionType> regionTypes = Optional.ofNullable(filterDto.getRegions()).orElse(List.of()).stream()
+        List<RegionType> regionTypes = Optional.ofNullable(regions).orElse(List.of()).stream()
                 .map(RegionType::fromKoreanName)
                 .filter(Objects::nonNull)
                 .toList();
-        log.info("필터된 지역: {}", regionTypes); // 추가된 로그
 
         // 신고글 상태 찾기
-        List<ReportType> reportTypes = Optional.ofNullable(filterDto.getStatuses()).orElse(List.of()).stream()
+        List<ReportType> reportTypes = Optional.ofNullable(statuses).orElse(List.of()).stream()
                 .map(ReportType::fromKoreanDescription)
                 .filter(Objects::nonNull)
                 .toList();
-        log.info("필터된 상태: {}", reportTypes); // 추가된 로그
 
-        // JPA 메서드를 사용해 필터링과 정렬을 적용한 데이터 조회
-        List<Report> reports = reportRepository.findAllByFilters(regionTypes, reportTypes, filterDto.getSort());
-        log.info("조회된 신고글 수: {}", reports.size()); // 추가된 로그
+        // 필터링이 없는 경우 (즉, 모든 값을 조회해야 하는 경우)
+        boolean noRegionFilter = regions == null || regions.isEmpty();
+        boolean noStatusFilter = statuses == null || statuses.isEmpty();
 
-        // DTO로 변환
+        // sort 값 검증 (정렬 기준이 잘못된 경우 빈 리스트 반환)
+        if (sort != null && !List.of("date", "popularity").contains(sort)) {
+            log.warn("잘못된 정렬 옵션이 입력됨. 조회 결과 없음.");
+            return new ReportListResponse(List.of());
+        }
+
+        // 필터링 값이 있는데도 잘못된 경우 (즉, 잘못된 값이 있으면 빈 리스트 반환)
+        if ((!noRegionFilter && regions.size() != regionTypes.size()) ||
+                (!noStatusFilter && statuses.size() != reportTypes.size())) {
+            log.warn("잘못된 필터값이 입력됨. 조회 결과 없음.");
+            return new ReportListResponse(List.of());
+        }
+
+        // 특정 조건에 맞는 신고글 정렬하기
+        Specification<Report> specification = reportQueryService.buildReportSpecification(regionTypes, reportTypes, sort);
+        List<Report> reports = reportRepository.findAll(specification);
+
+        log.info("신고글 리스트 조회 완료. 조회된 신고글 수: {}", reports.size());
         List<ReportListResponse.ReportList> reportDtos = reports.stream()
                 .map(report -> new ReportListResponse.ReportList(
                         report.getId(),
@@ -113,36 +126,10 @@ public class ReportService {
                         report.getRoadAddr(),
                         report.getBookmarks().size(),
                         bookmarkRepository.existsByReportIdAndMemberId(report.getId(), memberId)
-                )).toList();
+                ))
+                .toList();
 
         return new ReportListResponse(reportDtos);
-    }
-
-    private static void validateFilters(ReportFilterRequest filterDto) {
-        log.info("여기 들어옴");
-
-        // regions 검증
-        if (filterDto.getRegions() != null) {
-            for (String region : filterDto.getRegions()) {
-                if (!RegionType.isValidRegion(region)) {
-                    throw new BadRequestException(1000, "잘못된 지역 값입니다.");
-                }
-            }
-        }
-
-        // sort 값 검증
-        if (filterDto.getSort() != null && !List.of("date", "popularity").contains(filterDto.getSort())) {
-            throw new BadRequestException(1000, "잘못된 정렬 옵션입니다. 가능한 정렬 옵션은 date이나 popularity입니다.");
-        }
-
-        // statuses 검증
-        if (filterDto.getStatuses() != null) {
-            for (String status : filterDto.getStatuses()) {
-                if (!ReportType.isValidStatus(status)) {
-                    throw new BadRequestException(1000, "잘못된 상태값입니다.");
-                }
-            }
-        }
     }
 
     /**

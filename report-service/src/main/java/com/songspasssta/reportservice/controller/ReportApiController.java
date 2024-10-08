@@ -44,10 +44,11 @@ public class ReportApiController {
      */
     @PostMapping
     public ResponseEntity<SuccessResponse<ReportListResponse>> findAllReports(
-            @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
-            @RequestBody ReportFilterRequest filterDto) {
-
-        ReportListResponse response = reportService.findAllReports(memberId, filterDto);
+            @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
+            @RequestParam(value = "region", required = false) List<String> regions,
+            @RequestParam(value = "sort", required = false) String sort,
+            @RequestParam(value = "status", required = false) List<String> statuses){
+        ReportListResponse response = reportService.findAllReports(memberId, regions, sort, statuses);
         return ResponseEntity.ok().body(SuccessResponse.of(response));
     }
 
