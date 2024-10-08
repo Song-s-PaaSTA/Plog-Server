@@ -96,6 +96,10 @@ public class MemberService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
+        if (!member.getNickname().isEmpty()) {
+            return MemberInfoResponse.of(member);
+        }
+
         final String profileImageUrl = bucketService.upload(profileImage);
         final Reward reward = createReward(member);
 
