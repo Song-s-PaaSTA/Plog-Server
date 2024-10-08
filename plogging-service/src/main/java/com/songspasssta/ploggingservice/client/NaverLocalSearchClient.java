@@ -12,6 +12,6 @@ public interface NaverLocalSearchClient {
     @GetMapping("/v1/search/local.json")
     NaverSearchResponse searchLocal(
             @RequestParam("query") String query,
-            @RequestParam(value = "display", defaultValue = "5") int display // 한 번에 표시할 검색 결과 개수: 5개
+            @RequestParam(value = "display", defaultValue = "5") int display // 한 번에 표시할 검색 결과 개수: 5개 (max)
     );
 }

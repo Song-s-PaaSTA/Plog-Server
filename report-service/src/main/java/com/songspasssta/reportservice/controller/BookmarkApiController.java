@@ -1,17 +1,13 @@
 package com.songspasssta.reportservice.controller;
 
-import com.songspasssta.reportservice.dto.response.ReportListResponseDto;
+import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponse;
 import com.songspasssta.reportservice.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
-/**
- * 북마크 관련 API 컨트롤러
- */
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/reports")
@@ -19,27 +15,21 @@ public class BookmarkApiController {
     private final BookmarkService bookmarkService;
 
     /**
-     * 내가 북마크한 신고글 목록 조회
-     *
-     * @param memberId 회원 ID
-     * @return 북마크한 신고글 목록 응답 DTO 리스트
+     * 북마크한 신고글 조회
      */
     @GetMapping("/bookmarks/mine")
-    public List<ReportListResponseDto> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
-        // TODO request header로 토큰 받기
-        return bookmarkService.findMyBookmarks(memberId);
+    public ResponseEntity<BookmarkedReportsResponse> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        BookmarkedReportsResponse response = bookmarkService.findMyBookmarks(memberId);
+        return ResponseEntity.ok(response);
     }
 
     /**
      * 북마크 토글
-     *
-     * @param reportId 신고글 ID
-     * @param memberId 회원 ID
-     * @return 변경된 북마크 상태
      */
     @PostMapping("/{reportId}/bookmarks")
-    public boolean toggleBookmark(@PathVariable("reportId") Long reportId,
-                                  @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
-        return bookmarkService.toggleBookmark(reportId, memberId);
+    public ResponseEntity<String> toggleBookmark(@PathVariable Long reportId,
+                                                  @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+        String responseMessage = bookmarkService.toggleBookmark(reportId, memberId);
+        return ResponseEntity.ok(responseMessage);
     }
 }
