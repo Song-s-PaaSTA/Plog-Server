@@ -37,13 +37,13 @@ public class PloggingController {
     }
 
     @PostMapping(value = "/proof", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<Void> savePlogging(
+    public ResponseEntity<SuccessResponse<?>> savePlogging(
             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @Valid @RequestPart(value = "request") final PloggingRequest ploggingRequest,
             @RequestPart(value = "file", required = false) final MultipartFile ploggingImage
     ) throws IOException {
         ploggingService.savePlogging(memberId, ploggingRequest, ploggingImage);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 
     @DeleteMapping

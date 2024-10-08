@@ -14,4 +14,8 @@ public class SuccessResponse<T> {
     public static <T> SuccessResponse<T> of(final T message) {
         return new SuccessResponse(200, message);
     }
+
+    public static <T> SuccessResponse<T> ofEmpty() {
+        return new SuccessResponse(204, null);
+    }
 }

@@ -1,7 +1,6 @@
 package com.songspasssta.ploggingservice.client;
 
 import com.songspasssta.ploggingservice.config.FeignConfig;
-import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
 import com.songspasssta.ploggingservice.dto.request.TMapRouteRequest;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import org.springframework.cloud.openfeign.FeignClient;

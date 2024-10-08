@@ -31,11 +31,11 @@ public class ReportApiController {
      * 신고글 저장
      */
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Void> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
+    public ResponseEntity<SuccessResponse<?>> save(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
                                      @RequestPart("requestDto") @Valid ReportSaveRequest requestDto,
                                      @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
         reportService.save(memberId, requestDto, reportImgFile);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 
     /**
@@ -74,22 +74,22 @@ public class ReportApiController {
      * 신고글 삭제
      */
     @DeleteMapping("/{reportId}")
-    public ResponseEntity<Void> deleteReport(@PathVariable("reportId") Long reportId,
+    public ResponseEntity<SuccessResponse<?>> deleteReport(@PathVariable("reportId") Long reportId,
                                              @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
         reportService.deleteReport(reportId, memberId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 
     /**
      * 신고글 수정
      */
     @PatchMapping("/{reportId}")
-    public ResponseEntity<Void> updateReport(@PathVariable("reportId") Long reportId,
+    public ResponseEntity<SuccessResponse<?>> updateReport(@PathVariable("reportId") Long reportId,
                                              @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
                                              @RequestPart("requestDto") @Valid ReportUpdateRequest requestDto,
                                              @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {
         reportService.updateReport(reportId, memberId, requestDto, reportImgFile);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 
     /**

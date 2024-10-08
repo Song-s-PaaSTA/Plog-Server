@@ -82,14 +82,14 @@ public class MemberController {
     }
 
     @DeleteMapping("/api/v1/logout")
-    public ResponseEntity<Void> logout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
+    public ResponseEntity<SuccessResponse<?>> logout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         memberService.logout(memberId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 
     @DeleteMapping("/api/v1/signout")
-    public ResponseEntity<Void> signout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
+    public ResponseEntity<SuccessResponse<?>> signout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         memberService.signout(memberId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().body(SuccessResponse.ofEmpty());
     }
 }
