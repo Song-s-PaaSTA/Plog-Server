@@ -84,11 +84,32 @@ public class ReportService {
     public ReportListResponse findAllReports(Long memberId, List<String> regions, String sort, List<String> statuses) {
         // 지역 찾기
         List<RegionType> regionTypes = Optional.ofNullable(regions).orElse(List.of()).stream()
-                .map(RegionType::fromKoreanName).toList();
+                .map(RegionType::fromKoreanName)
+                .filter(Objects::nonNull)
+                .toList();
 
         // 신고글 상태 찾기
         List<ReportType> reportTypes = Optional.ofNullable(statuses).orElse(List.of()).stream()
-                .map(ReportType::fromKoreanDescription).toList();
+                .map(ReportType::fromKoreanDescription)
+                .filter(Objects::nonNull)
+                .toList();
+
+        // 필터링이 없는 경우 (즉, 모든 값을 조회해야 하는 경우)
+        boolean noRegionFilter = regions == null || regions.isEmpty();
+        boolean noStatusFilter = statuses == null || statuses.isEmpty();
+
+        // sort 값 검증 (정렬 기준이 잘못된 경우 빈 리스트 반환)
+        if (sort != null && !List.of("date", "popularity").contains(sort)) {
+            log.warn("잘못된 정렬 옵션이 입력됨. 조회 결과 없음.");
+            return new ReportListResponse(List.of());
+        }
+
+        // 필터링 값이 있는데도 잘못된 경우 (즉, 잘못된 값이 있으면 빈 리스트 반환)
+        if ((!noRegionFilter && regions.size() != regionTypes.size()) ||
+                (!noStatusFilter && statuses.size() != reportTypes.size())) {
+            log.warn("잘못된 필터값이 입력됨. 조회 결과 없음.");
+            return new ReportListResponse(List.of());
+        }
 
         // 특정 조건에 맞는 신고글 정렬하기
         Specification<Report> specification = reportQueryService.buildReportSpecification(regionTypes, reportTypes, sort);
