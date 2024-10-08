@@ -20,8 +20,8 @@ public class RewardService {
      */
     public void increaseRewardScore(Long memberId) {
         try {
-            RewardResponse rewardResponse = rewardClient.increaseScore(memberId);
-            log.info("리워드 증가 성공. 회원 ID: {}, 리워드 : {}", memberId, rewardResponse.getScore());
+            rewardClient.increaseScore(memberId);
+            log.info("리워드 증가 성공. 회원 ID: {}", memberId);
         } catch (FeignException e) {
             log.error("리워드 증가 실패. 회원 ID: {}, 에러 메시지: {}", memberId, e.getMessage());
             throw new ApiClientException(ExceptionCode.NOT_FOUND_REWARD);

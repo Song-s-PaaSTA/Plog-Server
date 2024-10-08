@@ -4,23 +4,17 @@ import lombok.Getter;
 
 @Getter
 public class EntityNotFoundException extends RuntimeException {
-    private final ExceptionCode exceptionCode;
+    private final int code;
+    private final String message;
 
-    public EntityNotFoundException(final ExceptionCode exceptionCode) {
-        super(exceptionCode.getMessage());
-        this.exceptionCode = exceptionCode;
-    }
-
-    public EntityNotFoundException(final ExceptionCode exceptionCode, String message) {
+    public EntityNotFoundException(final ExceptionCode exceptionCode, final String message) {
         super(message);
-        this.exceptionCode = exceptionCode;
+        this.code = exceptionCode.getCode();
+        this.message = message;
     }
 
-    public int getCode() {
-        return exceptionCode.getCode(); // 예외 코드 반환
-    }
-
+    @Override
     public String getMessage() {
-        return exceptionCode.getMessage(); // 예외 메시지 반환
+        return this.message;
     }
 }

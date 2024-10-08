@@ -23,7 +23,7 @@ public enum ExceptionCode {
     EXPIRED_ACCESS_TOKEN(2005, "만료된 RefreshToken입니다."),
     FAIL_TO_RENEW_ACCESS_TOKEN(2006, "Access Token 재발급에 실패했습니다."),
 
-    NOT_FOUND_REWARD(3000, "리워드 서비스 호출에 실패했습니다. 잠시 후 다시 시도해주세요."),
+    NOT_FOUND_REWARD(3000, "리워드 증가에 실패했습니다."),
 
     NAVER_API_ERROR(4000, "네이버 API 호출 중 오류가 발생하였습니다."),
     INVALID_API_RESPONSE(4001, "네이버 API로부터 유효하지 않은 응답을 받았습니다."),

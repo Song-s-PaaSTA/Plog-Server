@@ -1,5 +1,6 @@
 package com.songspasssta.reportservice.service;
 
+import com.songspasssta.common.exception.BadRequestException;
 import com.songspasssta.common.exception.EntityNotFoundException;
 import com.songspasssta.common.exception.ExceptionCode;
 import com.songspasssta.common.exception.PermissionDeniedException;
@@ -42,6 +43,11 @@ public class ReportService {
      */
     @Transactional(rollbackFor = Exception.class)
     public void save(Long memberId, ReportSaveRequest requestDto, MultipartFile reportImgFile) {
+        // 이미지 업로드 처리
+        if (reportImgFile == null || reportImgFile.isEmpty()) {
+            throw new BadRequestException(1000, "신고글 이미지 파일은 필수입니다.");
+        }
+
         // 이미지 업로드 처리
         String imageUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
 
