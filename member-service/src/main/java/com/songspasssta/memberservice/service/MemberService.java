@@ -96,7 +96,7 @@ public class MemberService {
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
-        if (!member.getNickname().isEmpty()) {
+        if (member.getNickname() != null) {
             return MemberInfoResponse.of(member);
         }
 
