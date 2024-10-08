@@ -42,7 +42,7 @@ public class ReportApiController {
     /**
      * 모든 신고글 조회
      */
-    @PostMapping
+    @GetMapping
     public ResponseEntity<SuccessResponse<ReportListResponse>> findAllReports(
             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @RequestParam(value = "region", required = false) List<String> regions,
