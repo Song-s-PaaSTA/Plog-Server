@@ -22,6 +22,7 @@ public enum ExceptionCode {
     EXPIRED_REFRESH_TOKEN(2004, "만료된 AccessToken입니다."),
     EXPIRED_ACCESS_TOKEN(2005, "만료된 RefreshToken입니다."),
     FAIL_TO_RENEW_ACCESS_TOKEN(2006, "Access Token 재발급에 실패했습니다."),
+    PROFILE_IMAGE_EMPTY(2007, "프로필 이미지 입력은 필수입니다."),
 
     NOT_FOUND_REWARD(3000, "리워드 증가에 실패했습니다."),
 

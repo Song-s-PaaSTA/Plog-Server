@@ -89,6 +89,10 @@ public class MemberService {
     }
 
     public MemberInfoResponse completeSignup(final Long memberId, final SignupRequest signupRequest, final MultipartFile profileImage) throws IOException {
+        if (profileImage == null || profileImage.isEmpty()) {
+            throw new BadRequestException(PROFILE_IMAGE_EMPTY);
+        }
+
         final Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
 
