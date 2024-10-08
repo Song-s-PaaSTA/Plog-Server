@@ -2,7 +2,7 @@ package com.songspasssta.ploggingservice.config;
 
 import com.songspasssta.common.exception.BadRequestException;
 import com.songspasssta.common.exception.ExceptionResponse;
-import com.songspasssta.common.exception.FileUploadException;
+import com.songspasssta.common.exception.FileOperationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -52,11 +52,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ExceptionResponse(INTERNAL_SERVER_ERROR.getCode(), INTERNAL_SERVER_ERROR.getMessage()));
     }
 
-    @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<ExceptionResponse> handleFileUploadException(FileUploadException e) {
+    @ExceptionHandler(FileOperationException.class)
+    public ResponseEntity<ExceptionResponse> handleFileUploadException(FileOperationException e) {
         log.error("FileUploadException: {}", e.getMessage());
         return ResponseEntity
                 .status(400)
-                .body(new ExceptionResponse(e.getCode(), e.getMessage()));
+                .body(new ExceptionResponse(e.getExceptionCode().getCode(), e.getMessage()));
     }
 }

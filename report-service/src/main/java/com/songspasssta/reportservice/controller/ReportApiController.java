@@ -52,7 +52,7 @@ public class ReportApiController {
      * 신고글 상세 조회
      */
     @GetMapping("/{reportId}")
-    public ResponseEntity<ReportDetailResponse> findReportById(@PathVariable Long reportId,
+    public ResponseEntity<ReportDetailResponse> findReportById(@PathVariable("reportId") Long reportId,
                                                                @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
         ReportDetailResponse response = reportService.findReportById(reportId, memberId);
         return ResponseEntity.ok(response);
@@ -71,7 +71,7 @@ public class ReportApiController {
      * 신고글 삭제
      */
     @DeleteMapping("/{reportId}")
-    public ResponseEntity<Void> deleteReport(@PathVariable Long reportId,
+    public ResponseEntity<Void> deleteReport(@PathVariable("reportId") Long reportId,
                                              @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
         reportService.deleteReport(reportId, memberId);
         return ResponseEntity.noContent().build();
@@ -81,7 +81,7 @@ public class ReportApiController {
      * 신고글 수정
      */
     @PatchMapping("/{reportId}")
-    public ResponseEntity<Void> updateReport(@PathVariable Long reportId,
+    public ResponseEntity<Void> updateReport(@PathVariable("reportId") Long reportId,
                                                        @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId,
                                                        @RequestPart("requestDto") @Valid ReportUpdateRequest requestDto,
                                                        @RequestPart(value = "reportImgFile", required = false) MultipartFile reportImgFile) {

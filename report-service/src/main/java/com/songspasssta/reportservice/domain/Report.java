@@ -56,9 +56,9 @@ public class Report extends BaseEntity {
     @OneToMany(mappedBy = "report", orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
-    public void updateDetails(String reportDesc, ReportType reportType, String roadAddr) {
+    public void updateDetails(String reportDesc, ReportType reportType, String reportImgUrl) {
         this.reportDesc = reportDesc;
         this.reportType = reportType;
-        this.roadAddr = roadAddr;
+        this.reportImgUrl = reportImgUrl;
     }
 }

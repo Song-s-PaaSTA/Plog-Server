@@ -33,8 +33,8 @@ public class PlaceService {
             // 필요한 장소 정보만 추출
             List<PlaceResponse.PlaceDto> locationInfoList = response.getItems().stream()
                     .map(item -> new PlaceResponse.PlaceDto(
-                            Double.parseDouble(item.getMapy()),
-                            Double.parseDouble(item.getMapx()),
+                            adjustCoordinate(item.getMapy()),
+                            adjustCoordinate(item.getMapx()),
                             item.getRoadAddress(),
                             // 장소 정보에 있는 불필요한 <b>와 </b>값 제거
                             StringUtils.replace(item.getTitle(), "<b>", "").replace("</b>", "")
@@ -47,4 +47,10 @@ public class PlaceService {
             throw new NaverApiException(ExceptionCode.NAVER_API_ERROR);
         }
     }
+
+    // API에서 위도, 경도를 1E6 단위로 표현하는 경우를 처리
+    private Double adjustCoordinate(String coordinate) {
+        return Double.parseDouble(coordinate) / 1E7;
+    }
+
 }

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -176,11 +177,10 @@ public class ReportService {
         Report report = validateReportAccess(reportId, memberId);
 
         fileService.deleteFile(requestDto.getExistingImgUrl());
-        String newImageUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
-
+        String newImgUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
         ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
-        report.updateDetails(requestDto.getReportDesc(), reportType, newImageUrl);
+        report.updateDetails(requestDto.getReportDesc(), reportType, newImgUrl);
         log.info("신고글 수정 완료. 신고글 ID: {}", reportId);
     }
 

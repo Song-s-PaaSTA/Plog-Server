@@ -2,14 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/apigateway-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/apigateway-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/eureka-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/eureka-server.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/member-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/member-service.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/plog-server.iml" filepath="$PROJECT_DIR$/.idea/plog-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/plogging-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/plogging-service.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/report-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/report-service.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/trash-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/trash-service.main.iml" />
     </modules>
   </component>
 </project>
