@@ -33,8 +33,8 @@ public class PlaceService {
             // 필요한 장소 정보만 추출
             List<PlaceResponse.PlaceDto> locationInfoList = response.getItems().stream()
                     .map(item -> new PlaceResponse.PlaceDto(
-                            Float.parseFloat(item.getMapy()),
-                            Float.parseFloat(item.getMapx()),
+                            Double.parseDouble(item.getMapy()),
+                            Double.parseDouble(item.getMapx()),
                             item.getRoadAddress(),
                             // 장소 정보에 있는 불필요한 <b>와 </b>값 제거
                             StringUtils.replace(item.getTitle(), "<b>", "").replace("</b>", "")
