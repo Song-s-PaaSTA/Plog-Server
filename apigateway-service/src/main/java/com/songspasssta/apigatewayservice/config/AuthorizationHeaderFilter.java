@@ -1,12 +1,17 @@
 package com.songspasssta.apigatewayservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.songspasssta.apigatewayservice.auth.TokenProvider;
+import com.songspasssta.common.exception.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.core.io.buffer.DataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -63,8 +68,22 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
         final ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
+        response.getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        return response.setComplete();
+        final ExceptionResponse errorResponse = new ExceptionResponse(401, "인증되지 않은 유저입니다.");
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final DataBufferFactory dataBufferFactory = response.bufferFactory();
+
+        try {
+            final byte[] jsonBytes = objectMapper.writeValueAsBytes(errorResponse);
+            final DataBuffer dataBuffer = dataBufferFactory.wrap(jsonBytes);
+
+            return response.writeWith(Mono.just(dataBuffer));
+        } catch (Exception e) {
+            log.error("Error writing error response", e);
+            return response.setComplete();
+        }
     }
 
     static class Config {
