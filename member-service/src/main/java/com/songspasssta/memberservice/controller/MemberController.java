@@ -21,7 +21,7 @@ import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 @Tag(name = "member", description = "멤버 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping
 public class MemberController {
 
     private final Environment env;
@@ -43,7 +43,7 @@ public class MemberController {
         );
     }
 
-    @PostMapping("/login/{provider}")
+    @PostMapping("/api/v1/login/{provider}")
     public ResponseEntity<LoginResponse> login(
             @PathVariable("provider") final String provider,
             @RequestParam("code") final String code
@@ -52,7 +52,7 @@ public class MemberController {
         return ResponseEntity.ok().body(loginResponse);
     }
 
-    @PatchMapping("/signup/complete")
+    @PatchMapping("/api/v1/signup/complete")
     public ResponseEntity<MemberInfoResponse> completeSignup(
             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @RequestPart(value = "request") @Valid final SignupRequest signupRequest,
@@ -62,31 +62,31 @@ public class MemberController {
         return ResponseEntity.ok().body(profileResponse);
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/api/v1/profile")
     public ResponseEntity<MemberInfoResponse> getProfile(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         final MemberInfoResponse memberInfoResponse = memberService.getProfile(memberId);
         return ResponseEntity.ok().body(memberInfoResponse);
     }
 
-    @GetMapping("/plogging")
+    @GetMapping("/api/v1/plogging")
     public ResponseEntity<PloggingListResponse> getAllPlogging(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         final PloggingListResponse ploggingListResponse = memberService.getAllPlogging(memberId);
         return ResponseEntity.ok().body(ploggingListResponse);
     }
 
-    @PostMapping("/renew")
+    @PostMapping("/api/v1/renew")
     public ResponseEntity<AccessTokenResponse> renewAccessToken(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         final AccessTokenResponse accessTokenResponse = memberService.renewAccessToken(memberId);
         return ResponseEntity.ok().body(accessTokenResponse);
     }
 
-    @DeleteMapping("/logout")
+    @DeleteMapping("/api/v1/logout")
     public ResponseEntity<Void> logout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
-        memberService.logout();
+        memberService.logout(memberId);
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/signout")
+    @DeleteMapping("/api/v1/signout")
     public ResponseEntity<Void> signout(@RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId) {
         memberService.signout(memberId);
         return ResponseEntity.noContent().build();

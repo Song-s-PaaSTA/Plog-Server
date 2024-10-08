@@ -11,7 +11,6 @@ import java.util.List;
 public class PloggingListResponse {
 
     private List<PloggingResponse> ploggingList;
-    private boolean hasNext;
 
     @Data
     public static class PloggingResponse {

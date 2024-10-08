@@ -110,30 +110,46 @@ public class MemberService {
     }
 
     public AccessTokenResponse renewAccessToken(final Long memberId) {
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
+
         final String accessToken = tokenExtractor.getAccessToken();
         final String refreshToken = tokenExtractor.getRefreshToken();
         if (tokenProvider.isValidRefreshAndValidAccess(refreshToken, accessToken)) {
             return new AccessTokenResponse(accessToken);
         } else if (tokenProvider.isValidRefreshAndInvalidAccess(refreshToken, accessToken)) {
-            final String newAccessToken = tokenProvider.generateAccessToken(memberId.toString());
+            final String newAccessToken = tokenProvider.generateAccessToken(member.getId().toString());
             return new AccessTokenResponse(newAccessToken);
         }
         throw new BadRequestException(FAIL_TO_RENEW_ACCESS_TOKEN);
     }
 
     public PloggingListResponse getAllPlogging(final Long memberId) {
-        final PloggingListResponse ploggingListResponse = ploggingClientService.getMemberPlogging(memberId);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
+
+        final PloggingListResponse ploggingListResponse = ploggingClientService.getMemberPlogging(member.getId());
         return ploggingListResponse;
     }
 
-    public void logout() {
+    public void logout(final Long memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new BadRequestException(NOT_FOUND_MEMBER_ID);
+        }
+
         final String refreshToken = tokenExtractor.getRefreshToken();
         refreshTokenRepository.deleteById(refreshToken);
     }
 
     public void signout(final Long memberId) {
-        reportClientService.deleteAllByMemberId(memberId);
-        ploggingClientService.deleteAllByMemberId(memberId);
+        final Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new BadRequestException(NOT_FOUND_MEMBER_ID));
+
+        final String refreshToken = tokenExtractor.getRefreshToken();
+
+        reportClientService.deleteAllByMemberId(member.getId());
+        ploggingClientService.deleteAllByMemberId(member.getId());
+        refreshTokenRepository.deleteById(refreshToken);
         memberRepository.deleteById(memberId);
     }
 

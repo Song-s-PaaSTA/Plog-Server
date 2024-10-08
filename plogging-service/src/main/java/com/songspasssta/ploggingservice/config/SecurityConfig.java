@@ -1,4 +1,4 @@
-package com.songspasssta.memberservice.config;
+package com.songspasssta.ploggingservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,9 +31,9 @@ public class SecurityConfig {
                 .logout(AbstractHttpConfigurer::disable)
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/webjars/**", "/member/v1/api-docs", "/api/v1/login/**", "/api/v1/renew", "/api/v1/**", "/api/v1/reward").permitAll()
+                        .requestMatchers("/api/v1/place", "/api/v1/plogging/route").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        .anyRequest().permitAll()
+                        .requestMatchers("/api/**").permitAll()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .defaultAuthenticationEntryPointFor(
