@@ -1,7 +1,8 @@
 package com.songspasssta.trashservice.service;
 
-import com.songspasssta.trashservice.dto.response.TrashResponse;
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.trashservice.domain.repository.TrashRepository;
+import com.songspasssta.trashservice.dto.response.TrashResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,18 +17,19 @@ public class TrashService {
     /**
      * 모든 쓰레기 장소 조회
      */
-    public ResponseEntity<TrashResponse> getAllTrash() {
-        return ResponseEntity.ok(
-                new TrashResponse(
-                        trashRepository.findAll().stream()
-                                .map(trash -> new TrashResponse.TrashDto(
-                                        trash.getId(),
-                                        trash.getLatitude(),
-                                        trash.getLongitude(),
-                                        trash.getRoadAddr(),
-                                        trash.getPlaceInfo()
-                                ))
-                                .toList()
+    public ResponseEntity<SuccessResponse<TrashResponse>> getAllTrash() {
+        return ResponseEntity.ok().body(SuccessResponse.of(
+                        new TrashResponse(
+                                trashRepository.findAll().stream()
+                                        .map(trash -> new TrashResponse.TrashDto(
+                                                trash.getId(),
+                                                trash.getLatitude(),
+                                                trash.getLongitude(),
+                                                trash.getRoadAddr(),
+                                                trash.getPlaceInfo()
+                                        ))
+                                        .toList()
+                        )
                 )
         );
     }

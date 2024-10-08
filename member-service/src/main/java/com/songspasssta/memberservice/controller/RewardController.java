@@ -1,5 +1,6 @@
 package com.songspasssta.memberservice.controller;
 
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.memberservice.dto.response.RewardListResponse;
 import com.songspasssta.memberservice.dto.response.RewardResponse;
 import com.songspasssta.memberservice.service.RewardService;
@@ -17,9 +18,9 @@ public class RewardController {
     private final RewardService rewardService;
 
     @GetMapping
-    public ResponseEntity<RewardListResponse> getAllRewards() {
+    public ResponseEntity<SuccessResponse<RewardListResponse>> getAllRewards() {
         final RewardListResponse rewardListResponse = rewardService.getAllRewards();
-        return ResponseEntity.ok().body(rewardListResponse);
+        return ResponseEntity.ok().body(SuccessResponse.of(rewardListResponse));
     }
 
     @PatchMapping("/incr/{memberId}")

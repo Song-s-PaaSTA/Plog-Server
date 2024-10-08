@@ -2,6 +2,7 @@ package com.songspasssta.ploggingservice.service;
 
 import com.songspasssta.common.exception.ExceptionCode;
 import com.songspasssta.common.exception.NaverApiException;
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.ploggingservice.client.NaverLocalSearchClient;
 import com.songspasssta.ploggingservice.dto.response.NaverSearchResponse;
 import com.songspasssta.ploggingservice.dto.response.PlaceResponse;
@@ -25,7 +26,7 @@ public class PlaceService {
      * 네이버 로컬 검색 API를 호출하여 도로명 주소 검색 결과를 받아옴
      * 검색 결과에서 필요한 장소명, 도로명 주소, 위도, 경도 정보를 추출
      */
-    public ResponseEntity<PlaceResponse> getLocationInfo(String query) {
+    public ResponseEntity<SuccessResponse<PlaceResponse>> getLocationInfo(String query) {
         try {
             // 네이버 장소 검색 API 호출
             NaverSearchResponse response = naverLocalSearchClient.searchLocal(query, 5);
@@ -41,7 +42,7 @@ public class PlaceService {
                     )).toList();
 
             log.info("장소 정보 조회 성공: {}", locationInfoList);
-            return ResponseEntity.ok(new PlaceResponse(locationInfoList));
+            return ResponseEntity.ok().body(SuccessResponse.of(new PlaceResponse(locationInfoList)));
         } catch (FeignException e) {
             log.error("네이버 API 호출 실패: {}", e.getMessage(), e);
             throw new NaverApiException(ExceptionCode.NAVER_API_ERROR);

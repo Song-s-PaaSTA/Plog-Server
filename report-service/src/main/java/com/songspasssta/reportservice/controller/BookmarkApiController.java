@@ -1,5 +1,6 @@
 package com.songspasssta.reportservice.controller;
 
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.reportservice.dto.response.BookmarkedReportsResponse;
 import com.songspasssta.reportservice.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
@@ -18,18 +19,18 @@ public class BookmarkApiController {
      * 북마크한 신고글 조회
      */
     @GetMapping("/bookmarks/mine")
-    public ResponseEntity<BookmarkedReportsResponse> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
+    public ResponseEntity<SuccessResponse<BookmarkedReportsResponse>> findMyBookmarks(@RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
         BookmarkedReportsResponse response = bookmarkService.findMyBookmarks(memberId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(SuccessResponse.of(response));
     }
 
     /**
      * 북마크 토글
      */
     @PostMapping("/{reportId}/bookmarks")
-    public ResponseEntity<String> toggleBookmark(@PathVariable Long reportId,
+    public ResponseEntity<SuccessResponse<String>> toggleBookmark(@PathVariable Long reportId,
                                                   @RequestHeader(GATEWAY_AUTH_HEADER) Long memberId) {
         String responseMessage = bookmarkService.toggleBookmark(reportId, memberId);
-        return ResponseEntity.ok(responseMessage);
+        return ResponseEntity.ok().body(SuccessResponse.of(responseMessage));
     }
 }

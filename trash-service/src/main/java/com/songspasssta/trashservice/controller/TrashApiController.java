@@ -1,6 +1,7 @@
 package com.songspasssta.trashservice.controller;
 
 
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.trashservice.dto.response.TrashResponse;
 import com.songspasssta.trashservice.service.TrashService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class TrashApiController {
      * 쓰레기 장소 조회
      */
     @GetMapping
-    public ResponseEntity<TrashResponse> getAllTrash() {
+    public ResponseEntity<SuccessResponse<TrashResponse>> getAllTrash() {
         return trashService.getAllTrash();
     }
 }

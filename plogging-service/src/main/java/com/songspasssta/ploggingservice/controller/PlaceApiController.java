@@ -1,5 +1,6 @@
 package com.songspasssta.ploggingservice.controller;
 
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.ploggingservice.dto.response.PlaceResponse;
 import com.songspasssta.ploggingservice.service.PlaceService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class PlaceApiController {
      * 도로명 주소 기반 장소 조회
      */
     @GetMapping
-    public ResponseEntity<PlaceResponse> getLocationInfo(@RequestParam String query) {
+    public ResponseEntity<SuccessResponse<PlaceResponse>> getLocationInfo(@RequestParam String query) {
         return placeService.getLocationInfo(query);
     }
 }

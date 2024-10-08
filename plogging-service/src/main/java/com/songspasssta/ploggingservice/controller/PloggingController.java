@@ -1,5 +1,6 @@
 package com.songspasssta.ploggingservice.controller;
 
+import com.songspasssta.common.response.SuccessResponse;
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
 import com.songspasssta.ploggingservice.dto.response.CoordinatesResponse;
@@ -24,9 +25,9 @@ public class PloggingController {
     private final PloggingService ploggingService;
 
     @GetMapping("/route")
-    public ResponseEntity<CoordinatesResponse> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
+    public ResponseEntity<SuccessResponse<CoordinatesResponse>> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
         final CoordinatesResponse coordinatesResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
-        return ResponseEntity.ok().body(coordinatesResponse);
+        return ResponseEntity.ok().body(SuccessResponse.of(coordinatesResponse));
     }
 
     @GetMapping
