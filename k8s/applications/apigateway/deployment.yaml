@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway-deployment
+  labels:
+    env: development
+    tier: backend
+    app: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      env: development
+      tier: backend
+      app: apigateway
+  template:
+    metadata:
+      labels:
+        env: development
+        tier: backend
+        app: apigateway
+    spec:
+      containers:
+        - name: apigateway
+          image: plog-registry.kr.ncr.ntruss.com/songspasssta-plog-storage:apigateway-service-1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: config  # ConfigMap에서 TZ 값을 가져옴
+                  key: TZ
+            - name: SERVER_PORT
+              value: "8000"  # application.yml에서사용된 포트
+            - name: EUREKA_INSTANCE_HOSTNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: EUREKA_INSTANCE_HOSTNAME
+#            - name: SPRING_CLOUD_CONFIG_URI
+#              valueFrom:
+#                configMapKeyRef:
+#                  name: backend-configmap
+#                  key: SPRING_CLOUD_CONFIG_URI
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
+                  key: JWT-SECRET-KEY
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3

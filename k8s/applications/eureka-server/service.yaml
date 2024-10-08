@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: eureka-server
+  labels:
+    env: development
+    tier: backend
+    app: eureka
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8761
+      targetPort: 8761
+  selector:
+    env: development
+    tier: backend
+    app: eureka
