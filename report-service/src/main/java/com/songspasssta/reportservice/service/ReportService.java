@@ -9,7 +9,6 @@ import com.songspasssta.reportservice.domain.repository.BookmarkRepository;
 import com.songspasssta.reportservice.domain.repository.ReportRepository;
 import com.songspasssta.reportservice.domain.type.RegionType;
 import com.songspasssta.reportservice.domain.type.ReportType;
-import com.songspasssta.reportservice.dto.request.ReportFilterRequest;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequest;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.MyReportListResponse;

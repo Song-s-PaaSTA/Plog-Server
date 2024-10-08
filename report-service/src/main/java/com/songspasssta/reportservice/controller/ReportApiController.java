@@ -1,7 +1,6 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.common.response.SuccessResponse;
-import com.songspasssta.reportservice.dto.request.ReportFilterRequest;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequest;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.MyReportListResponse;
