@@ -6,8 +6,6 @@ import com.songspasssta.memberservice.domain.repository.RewardRepository;
 import com.songspasssta.memberservice.dto.response.RewardListResponse;
 import com.songspasssta.memberservice.dto.response.RewardResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +21,8 @@ public class RewardService {
     private final RewardRepository rewardRepository;
 
     public RewardListResponse getAllRewards() {
-        final List<Reward> rewards = rewardRepository.findAll();
+        final List<Reward> rewards = rewardRepository.findAllByOrderByScoreDesc();
+        ;
         return RewardListResponse.of(rewards);
     }
 

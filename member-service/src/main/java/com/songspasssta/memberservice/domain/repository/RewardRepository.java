@@ -10,5 +10,5 @@ public interface RewardRepository extends CrudRepository<Reward, Long> {
 
     Optional<Reward> findByMemberId(final Long memberId);
 
-    List<Reward> findAll();
+    List<Reward> findAllByOrderByScoreDesc();
 }
