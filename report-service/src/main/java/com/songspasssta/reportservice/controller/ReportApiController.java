@@ -1,7 +1,6 @@
 package com.songspasssta.reportservice.controller;
 
 import com.songspasssta.common.response.SuccessResponse;
-import com.songspasssta.reportservice.dto.request.ReportFilterRequest;
 import com.songspasssta.reportservice.dto.request.ReportSaveRequest;
 import com.songspasssta.reportservice.dto.request.ReportUpdateRequest;
 import com.songspasssta.reportservice.dto.response.MyReportListResponse;
@@ -42,7 +41,7 @@ public class ReportApiController {
     /**
      * 모든 신고글 조회
      */
-    @PostMapping
+    @GetMapping
     public ResponseEntity<SuccessResponse<ReportListResponse>> findAllReports(
             @RequestHeader(GATEWAY_AUTH_HEADER) final Long memberId,
             @RequestParam(value = "region", required = false) List<String> regions,
