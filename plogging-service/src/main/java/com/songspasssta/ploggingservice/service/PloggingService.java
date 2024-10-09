@@ -5,13 +5,13 @@ import com.songspasssta.ploggingservice.domain.Plogging;
 import com.songspasssta.ploggingservice.domain.repository.PloggingRepository;
 import com.songspasssta.ploggingservice.dto.request.PloggingRequest;
 import com.songspasssta.ploggingservice.dto.request.PloggingRouteRequest;
-import com.songspasssta.ploggingservice.dto.request.TMapRouteRequest;
+import com.songspasssta.ploggingservice.dto.request.TMapRouteRequestWithPassList;
+import com.songspasssta.ploggingservice.dto.request.TMapRouteRequestWithoutPassList;
 import com.songspasssta.ploggingservice.dto.response.CoordinatesResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingListResponse;
 import com.songspasssta.ploggingservice.dto.response.PloggingRouteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,7 +56,21 @@ public class PloggingService {
     }
 
     public CoordinatesResponse getPloggingRoute(final PloggingRouteRequest ploggingRouteRequest) {
-        final TMapRouteRequest tMapRouteRequest = new TMapRouteRequest(
+        PloggingRouteResponse ploggingRouteResponse;
+        if (ploggingRouteRequest.getPassX() != null || ploggingRouteRequest.getPassY() != null) {
+            final TMapRouteRequestWithPassList tMapRouteRequest = createTMapRouteRequestWithPassList(ploggingRouteRequest);
+            ploggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
+        } else {
+            final TMapRouteRequestWithoutPassList tMapRouteRequest = createTMapRouteRequestWithoutPassList(ploggingRouteRequest);
+            ploggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
+        }
+
+        final CoordinatesResponse coordinates = new CoordinatesResponse(ploggingRouteResponse.getAllCoordinates());
+        return coordinates;
+    }
+
+    private TMapRouteRequestWithPassList createTMapRouteRequestWithPassList(final PloggingRouteRequest ploggingRouteRequest) {
+        return new TMapRouteRequestWithPassList(
                 ploggingRouteRequest.getStartX(),
                 ploggingRouteRequest.getStartY(),
                 ploggingRouteRequest.getEndX(),
@@ -67,9 +81,18 @@ public class PloggingService {
                 ploggingRouteRequest.getStartName(),
                 ploggingRouteRequest.getEndName()
         );
+    }
 
-        final PloggingRouteResponse ploggingRouteResponse = tMapClientService.getRoute(appKey, tMapRouteRequest);
-        final CoordinatesResponse coordinates = new CoordinatesResponse(ploggingRouteResponse.getAllCoordinates());
-        return coordinates;
+    private TMapRouteRequestWithoutPassList createTMapRouteRequestWithoutPassList(final PloggingRouteRequest ploggingRouteRequest) {
+        return new TMapRouteRequestWithoutPassList(
+                ploggingRouteRequest.getStartX(),
+                ploggingRouteRequest.getStartY(),
+                ploggingRouteRequest.getEndX(),
+                ploggingRouteRequest.getEndY(),
+                ploggingRouteRequest.getReqCoordType(),
+                ploggingRouteRequest.getResCoordType(),
+                ploggingRouteRequest.getStartName(),
+                ploggingRouteRequest.getEndName()
+        );
     }
 }
