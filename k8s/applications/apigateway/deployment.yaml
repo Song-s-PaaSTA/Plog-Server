@@ -33,7 +33,10 @@ spec:
                   name: config  # ConfigMap에서 TZ 값을 가져옴
                   key: TZ
             - name: SERVER_PORT
-              value: "8000"  # application.yml에서사용된 포트
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: SERVER_PORT
             - name: EUREKA_INSTANCE_HOSTNAME
               valueFrom:
                 configMapKeyRef:

@@ -30,34 +30,98 @@ spec:
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: config  # ConfigMap에서 TZ 값을 가져옴
+                  name: config
                   key: TZ
+
             - name: SERVER_PORT
-              value: "8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: SERVER_PORT
+
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: config
-                  key: TRASH_POSTGRES_HOST
+                  key: POSTGRES_HOST
+
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: POSTGRES_PORT
+
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: config
-                  key: TRASH_POSTGRES_DB
+                  key: POSTGRES_DB
+
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: POSTGRES_USER
+
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: POSTGRES_PASSWORD
+
+            - name: REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: REDIS_HOST
+
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: REDIS_PORT
+
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: REDIS_PASSWORD
+
             - name: SPRING_PROFILES_ACTIVE
               value: "k8s"
+
+            - name: S3_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: S3-BUCKET
+
+            - name: S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: S3-ACCESS-KEY
+
+            - name: S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: S3-SECRET-KEY
+
+            - name: NCLOUD_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: NCLOUD-ENDPOINT
+
+            - name: NCLOUD_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: NCLOUD-ACCESS-KEY
+
+            - name: NCLOUD_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: NCLOUD-SECRET-KEY

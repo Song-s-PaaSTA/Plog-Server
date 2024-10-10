@@ -30,60 +30,74 @@ spec:
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: config  # ConfigMap에서 TZ 값을 가져옴
+                  name: config
                   key: TZ
+
             - name: SERVER_PORT
-              value: "8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: SERVER_PORT
+
             - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: MEMBER_POSTGRES_HOST
+
             - name: POSTGRES_PORT
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: POSTGRES_PORT
+
             - name: POSTGRES_DB
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: MEMBER_POSTGRES_DB
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_PASSWORD
+
             - name: REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: REDIS_HOST
+
             - name: REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: config
                   key: REDIS_PORT
+
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: POSTGRES_USER
+
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: POSTGRES_PASSWORD
+
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: secret
                   key: REDIS_PASSWORD
+
             - name: JWT_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
+                  name: secret
                   key: JWT-SECRET-KEY
-#          readinessProbe:
-#            httpGet:
-#              path: /actuator/health
-#              port: 8080 # production 환경 -> 80
-#            initialDelaySeconds: 10
-#            periodSeconds: 5
-#            successThreshold: 1
-#            failureThreshold: 3
+
+# readinessProbe:
+#   httpGet:
+#     path: /actuator/health
+#     port: 8080 # production 환경 -> 80
+#   initialDelaySeconds: 10
+#   periodSeconds: 5
+#   successThreshold: 1
+#   failureThreshold: 3
