@@ -198,11 +198,17 @@ public class ReportService {
     public void updateReport(Long reportId, Long memberId, ReportUpdateRequest requestDto, MultipartFile reportImgFile) {
         Report report = validateReportAccess(reportId, memberId);
 
-        fileService.deleteFile(requestDto.getExistingImgUrl());
-        String newImgUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
+        // 이미지 파일이 있는 경우에만 업데이트
+        String ImgUrl = requestDto.getExistingImgUrl();
+        if (reportImgFile != null && !reportImgFile.isEmpty()) {
+            fileService.deleteFile(requestDto.getExistingImgUrl());
+            ImgUrl = fileService.uploadFile(reportImgFile, S3_FOLDER);
+        }
+
         ReportType reportType = Optional.ofNullable(ReportType.fromKoreanDescription(requestDto.getReportStatus()))
                 .orElse(ReportType.NOT_STARTED);
-        report.updateDetails(requestDto.getReportDesc(), reportType, newImgUrl);
+        report.updateDetails(requestDto.getReportDesc(), reportType, ImgUrl);
+
         log.info("신고글 수정 완료. 신고글 ID: {}", reportId);
     }
 
