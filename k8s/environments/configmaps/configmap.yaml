@@ -7,7 +7,7 @@ data:
   TZ: "Asia/Seoul"  # 한국 시간대 추가
   SERVER_PORT: "8080"
 
-  POSTGRES_HOST: "jdbc:postgresql://plog-post.c3camcq2i6u7.ap-northeast-2.rds.amazonaws.com"
+  POSTGRES_HOST: "plog-post.c3camcq2i6u7.ap-northeast-2.rds.amazonaws.com"
   POSTGRES_PORT: "5432"
   POSTGRES_DB: "plog_db"
 
@@ -15,4 +15,6 @@ data:
   REDIS_PORT: "18549"
 
   NCLOUD-ENDPOINT: "https://kr.object.ncloudstorage.com"
+  NCLOUD-BUCKET: "plog-bucket"
+
   S3-BUCKET: "plog-s3-bucket"

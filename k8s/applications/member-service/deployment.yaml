@@ -39,60 +39,6 @@ spec:
                   name: config
                   key: SERVER_PORT
 
-            - name: POSTGRES_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: MEMBER_POSTGRES_HOST
-
-            - name: POSTGRES_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: POSTGRES_PORT
-
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: MEMBER_POSTGRES_DB
-
-            - name: REDIS_HOST
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: REDIS_HOST
-
-            - name: REDIS_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: REDIS_PORT
-
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_USER
-
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_PASSWORD
-
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: REDIS_PASSWORD
-
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: JWT-SECRET-KEY
-
 # readinessProbe:
 #   httpGet:
 #     path: /actuator/health
