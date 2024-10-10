@@ -1,2 +1,3 @@
 ### IntelliJ IDEA ###
 .idea
+k8s/environments/secrets/secret.yaml
