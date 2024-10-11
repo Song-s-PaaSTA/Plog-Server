@@ -24,7 +24,7 @@ public class PloggingController {
 
     private final PloggingService ploggingService;
 
-    @GetMapping("/route")
+    @PostMapping("/route")
     public ResponseEntity<SuccessResponse<CoordinatesResponse>> getPloggingRoute(@RequestBody @Valid final PloggingRouteRequest ploggingRouteRequest) {
         final CoordinatesResponse coordinatesResponse = ploggingService.getPloggingRoute(ploggingRouteRequest);
         return ResponseEntity.ok().body(SuccessResponse.of(coordinatesResponse));
