@@ -34,6 +34,7 @@ spec:
                   key: TZ
             - name: SERVER_PORT
               value: "8000"  # application.yml에서사용된 포트
+
             - name: EUREKA_INSTANCE_HOSTNAME
               valueFrom:
                 configMapKeyRef:
@@ -44,11 +45,6 @@ spec:
 #                configMapKeyRef:
 #                  name: backend-configmap
 #                  key: SPRING_CLOUD_CONFIG_URI
-            - name: JWT_SECRET_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: secret  # JWT 시크릿 키 설정을 Kubernetes Secret으로 관리
-                  key: JWT-SECRET-KEY
           readinessProbe:
             httpGet:
               path: /actuator/health

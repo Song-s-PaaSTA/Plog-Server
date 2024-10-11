@@ -30,35 +30,16 @@ spec:
             - name: TZ
               valueFrom:
                 configMapKeyRef:
-                  name: config  # ConfigMap에서 TZ 값을 가져옴
+                  name: config
                   key: TZ
+
             - name: SERVER_PORT
-              value: "8080"
-            - name: POSTGRES_HOST
               valueFrom:
                 configMapKeyRef:
                   name: config
-                  key: PLOGGING_POSTGRES_HOST
-            - name: POSTGRES_PORT
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: POSTGRES_PORT
-            - name: POSTGRES_DB
-              valueFrom:
-                configMapKeyRef:
-                  name: config
-                  key: PLOGGING_POSTGRES_DB
-            - name: POSTGRES_USER
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_USER
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: secret
-                  key: POSTGRES_PASSWORD
+                  key: SERVER_PORT
+
+
 #          readinessProbe:
 #            httpGet:
 #              path: /actuator/health

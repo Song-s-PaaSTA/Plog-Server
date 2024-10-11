@@ -4,23 +4,17 @@ metadata:
   name: config
 data:
   EUREKA_INSTANCE_HOSTNAME: "eureka-server"
-  POSTGRES_PORT: "5432" # TODO 새 포트 설정
-
-  MEMBER_POSTGRES_HOST: "member-service-db-postgresql"
-  MEMBER_POSTGRES_DB: "member_service_db"
-
-  REDIS_HOST: "my-redis-master"
-  REDIS_PORT: "6379" # TODO 새 포트 설정
-
-  REPORT_POSTGRES_HOST: "report-service-db-postgresql"
-  REPORT_POSTGRES_DB: "report_service_db"
-
-  PLOGGING_POSTGRES_HOST: "plogging-service-db-postgresql"
-  PLOGGING_POSTGRES_DB: "plogging_service_db"
-
-  TRASH_POSTGRES_HOST: "trash-service-db-postgresql"
-  TRASH_POSTGRES_DB: "trash_service_db"
-
   TZ: "Asia/Seoul"  # 한국 시간대 추가
+  SERVER_PORT: "8080"
 
+  POSTGRES_HOST: "plog-post.c3camcq2i6u7.ap-northeast-2.rds.amazonaws.com"
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: "plog_db"
 
+  REDIS_HOST: "redis-18549.c98.us-east-1-4.ec2.redns.redis-cloud.com"
+  REDIS_PORT: "18549"
+
+  NCLOUD-ENDPOINT: "https://kr.object.ncloudstorage.com"
+  NCLOUD-BUCKET: "plog-bucket"
+
+  S3-BUCKET: "plog-s3-bucket"
