@@ -10,6 +10,7 @@ import com.songspasssta.memberservice.service.MemberService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import static com.songspasssta.common.auth.GatewayConstants.GATEWAY_AUTH_HEADER;
 
 @Tag(name = "member", description = "멤버 API")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
@@ -49,6 +51,7 @@ public class MemberController {
             @PathVariable("provider") final String provider,
             @RequestParam("code") final String code
     ) {
+        log.info("login");
         final LoginResponse loginResponse = memberService.login(provider, code);
         return ResponseEntity.ok().body(SuccessResponse.of(loginResponse));
     }
