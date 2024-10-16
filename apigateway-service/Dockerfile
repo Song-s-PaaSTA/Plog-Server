@@ -10,15 +10,6 @@ ENV APP_HOME=/usr/app/apigateway-service
 # 작업 디렉터리를 설정
 WORKDIR $APP_HOME
 
-# gradlew 파일과 필요한 스크립트, 소스 코드를 복사
-COPY . .
-
-# gradlew에 실행 권한 부여
-RUN chmod +x ./gradlew
-
-# gradlew clean build 실행
-RUN ./gradlew clean build
-
 # JAR 파일을 복사
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} apigateway.jar
