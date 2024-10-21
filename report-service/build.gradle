@@ -28,27 +28,24 @@ ext {
 }
 
 dependencies {
+
+	implementation files('../common/build/libs/common-0.0.1-SNAPSHOT-plain.jar')
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-//	implementation project(path: ':')
 	compileOnly 'org.projectlombok:lombok'
-//	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'org.postgresql:postgresql'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	implementation files('../common/build/libs/common-0.0.1-SNAPSHOT-plain.jar')
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.730'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
-
-	// Spring Cloud AWS 스타터 추가
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	// aws-java-sdk-s3의 최신 버전 명시적으로 추가
-	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.730'
-
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'io.github.openfeign:feign-httpclient:12.4'
 	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
