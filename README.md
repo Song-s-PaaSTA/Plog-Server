@@ -1,4 +1,4 @@
-# 🌱 Plog-Server 🌱
+# 🌱 𝗣𝗹𝗼𝗴-𝗦𝗲𝗿𝘃𝗲𝗿 🌱
 
 > [Plog 프로젝트 설명 바로 가기](https://github.com/Song-s-PaaSTA)
 
