@@ -1,4 +1,6 @@
-> [프로젝트 설명 바로 가기](https://github.com/Song-s-PaaSTA)
+# 🌱 Plog-Server 🌱
+
+> [Plog 프로젝트 설명 바로 가기](https://github.com/Song-s-PaaSTA)
 
 ```plaintext
 * 이 프로젝트는 MSA 아키텍처를 기반으로 여러 독립적인 마이크로서비스를 포함하고 있습니다. 
