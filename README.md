@@ -3,8 +3,8 @@
 > [Plog 프로젝트 설명 바로 가기](https://github.com/Song-s-PaaSTA)
 
 ```plaintext
-* 이 프로젝트는 MSA 아키텍처를 기반으로 여러 독립적인 마이크로서비스를 포함하고 있습니다. 
-각 서비스는 독립적으로 배포 및 확장 가능하고 Kubernetes(K8s)를 이용해 오케스트레이션됩니다.
+이 프로젝트는 MSA 아키텍처를 기반으로 여러 독립적인 마이크로서비스를 포함하고 있습니다. 
+각 서비스는 독립적으로 배포 및 확장 가능하고 Kubernetes를 이용해 오케스트레이션됩니다.
 ```
 
 </br>
@@ -136,7 +136,7 @@ k8s
 | ![CNA 개발](https://github.com/user-attachments/assets/28787b9b-bbea-4d85-b58e-d7dcbc6edc5f) | ![CI/CD](https://github.com/user-attachments/assets/ec26b341-4f77-4667-a7e6-9f178a628bd6)     |
 
 
-#### 1. 서비스 배포 및 API 통신 흐름 요약
+### 1. 서비스 배포 및 API 통신 흐름 요약
 - Admin이 Git에 코드를 푸시하면 CI/CD 파이프라인이 시작
 - SourceCommit에서 코드 수신 후 SourceBuild에서 Docker 이미지로 빌드하여 Container Registry에 저장
 - SourcePipeline이 SourceDeploy로 이미지를 전달해 Kubernetes에 배포
@@ -146,7 +146,7 @@ k8s
 
 </br>
 
-#### 2. 시스템 구성 및 배포 전략
+### 2. 시스템 구성 및 배포 전략
 - 플랫폼: NCloud Kubernetes Service(K-PaaS) 기반에서 마이크로서비스가 독립적으로 배포 및 관리되며, 오토스케일링으로 유연한 확장성과 높은 가용성 제공
 - CI/CD: Naver Cloud의 SourceCommit, SourceBuild, SourcePipeline, SourceDeploy로 구성된 자동화된 파이프라인을 통해 Docker 이미지 빌드 및 배포
 - MSA 구성: Plogging, Report, Trash, Member 서비스와 이를 지원하는 API Gateway, Eureka Server로 구성된 독립적인 마이크로서비스 구조
@@ -181,7 +181,7 @@ k8s
 12. Admin Processes (관리 프로세스)
 ```
 
-### '𝗣𝗹𝗼𝗴'의 𝟭𝟮-𝗙𝗮𝗰𝘁𝗼𝗿 적용 사항 일부 예시
+### '𝗣𝗹𝗼𝗴'의 𝟭𝟮-𝗙𝗮𝗰𝘁𝗼𝗿 적용 사항 예시
 ![Group 1707481581](https://github.com/user-attachments/assets/dc6c4bed-88bc-4f5f-af28-3c6134680767)
 
 
